@@ -5,9 +5,13 @@
 #include "shell_commands.h"
 #include "board_uart0.h"
 #include "destiny.h"
+#include "transceiver.h"
+#include "debug.h"
 
 #include "demo.h"
 #include "sense.h"
+
+
 
 const shell_command_t shell_commands[] = {
     {"init", "", init},
@@ -26,6 +30,12 @@ const shell_command_t shell_commands[] = {
 int main(void)
 {
     puts("SAFEST demo sensor v0.1");
+    DEBUG("Hello debug");
+
+    printf("Transceiver tid: %i\n", transceiver_pid);
+    transceiver_init(TRANSCEIVER_CC1100);
+    transceiver_start();
+    printf("Transceiver tid: %i\n", transceiver_pid);
 
     destiny_init_transport_layer();
 

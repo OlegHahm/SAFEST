@@ -39,3 +39,24 @@ USEMODULE += gpioint
 export INCLUDES = -I$(RIOTBOARD)/$(BOARD)/include -I$(RIOTBASE)/core/include -I$(RIOTCPU)/$(CPU)/include -I$(RIOTBASE)/sys/lib -I$(RIOTBASE)/sys/include/ -I$(RIOTBASE)/drivers/include/ -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/rpl -I$(RIOTBASE)/drivers/cc110x/
 
 include $(RIOTBASE)/Makefile.include
+
+$(info *******************************************)
+$(info **** Building Project $(PROJECT) ****)
+$(info *******************************************)
+$(info **** BOARD $(BOARD))
+$(info **** BASE:  $(RIOTBASE))
+$(info **** CPU:   $(RIOTCPU))
+$(info **** BOARD: $(RIOTBOARD))
+$(info *************************************)
+$(info **** MODULES:)
+$(foreach module,$(USEMODULE),$(info ++++           $(module)))
+$(info **** INCLUDES:)
+$(foreach include,$(INCLUDES),$(info ++++           $(include)))
+$(info **** BASELIBS:)
+$(foreach lib,$(BASELIBS),$(info ++++           $(lib)))
+$(info **** SRC:)
+$(foreach srcfile,$(SRC),$(info ++++           $(srcfile)))
+$(info **** OBJ:)
+$(foreach objfile,$(OBJ),$(info ++++           $(objfile)))
+$(info **** CC: $(CC))
+$(foreach flag,$(CFLAGS),$(info ++++            $(flag)))
