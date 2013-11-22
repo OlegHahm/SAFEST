@@ -45,7 +45,7 @@ void sense_thread(void)
 }
 
 
-void sense_init(void)
+void sense_init(char *unsued)
 {
 	SMB380_init_simple(100, SMB380_BAND_WIDTH_100HZ, SMB380_RANGE_2G);
 	puts("SENSE: Acceleration sensor initialized");
@@ -56,12 +56,12 @@ void sense_init(void)
 	LED_GREEN_ON;
 }
 
-void sense_enable(void)
+void sense_enable(char *unused)
 {
 	do_sense = 1;
 }
 
-void sense_disable(void)
+void sense_disable(char *unused)
 {
 	do_sense = 0;
 }
