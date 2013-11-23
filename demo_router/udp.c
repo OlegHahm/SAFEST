@@ -12,7 +12,7 @@
 
 #include "demo.h"
 
-#define UDP_BUFFER_SIZE     (16)
+#define UDP_BUFFER_SIZE     (128)
 #define SERVER_PORT     (0xFF01)
 
 char udp_server_stack_buffer[KERNEL_CONF_STACKSIZE_MAIN];
@@ -71,7 +71,7 @@ void udp_send(char *str)
     ipv6_addr_t ipaddr;
     int bytes_sent;
     int address;
-    char text[] = "abc";
+    char text[5];
     if (sscanf(str, "send %i %s", &address, text) < 2) {
         printf("usage: send <addr> <text>\n");
         return;
@@ -81,7 +81,7 @@ void udp_send(char *str)
 
     if(-1 == sock) {
         printf("Error Creating Socket!");
-        exit(EXIT_FAILURE);
+        return;
     }
 
     memset(&sa, 0, sizeof sa);
@@ -93,7 +93,7 @@ void udp_send(char *str)
     sa.sin6_port = HTONS(SERVER_PORT);
 
     bytes_sent = destiny_socket_sendto(sock, (char *)text,
-            strlen((char *)text) + 1, 0, &sa,
+            strlen(text) + 1, 0, &sa,
             sizeof sa);
 
     if(bytes_sent < 0) {

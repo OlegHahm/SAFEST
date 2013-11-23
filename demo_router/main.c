@@ -16,13 +16,14 @@ const shell_command_t shell_commands[] = {
     {"server", "Starts a UDP server", udp_server},
     {"send", "Send a UDP datagram", udp_send},
     {"ip", "Print all assigned IP addresses", ip},
+    {"ign", "ignore node", ignore},
     {NULL, NULL, NULL}
 };
 
 int main(void)
 {
-    puts("SAFEST demo router v0.1");
-
+    puts("SAFEST demo router v"VERSION);
+    puts("station: "STATION);
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);

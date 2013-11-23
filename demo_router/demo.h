@@ -2,6 +2,11 @@
 #define DEMO_H
 
 #include "kernel.h"
+
+#define VERSION "0.4"
+
+#define STATION "FUB"
+
 #define MONITOR_STACK_SIZE  (KERNEL_CONF_STACKSIZE_MAIN)
 #define RCV_BUFFER_SIZE     (32)
 
@@ -40,6 +45,8 @@ void udp_send(char *str);
 
 /* helper command handlers */
 void ip(char *unused);
+
+void ignore(char *addr);
 
 /* monitoring thread */
 void monitor(void);
