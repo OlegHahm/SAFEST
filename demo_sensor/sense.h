@@ -23,5 +23,16 @@ void sense_enable(char *unused);
  */
 void sense_disable(char *unused);
 
+/**
+ * @brief		Set the sensing parameters as thresholds and timeouts
+ *
+ * This function will parse and set the following parameters:
+ *   - higher and lower detection threshold
+ *   - higher and lower threshold crossing counter
+ *   - timeout for a detection cycle
+ *   - sampling interval
+ */
+void sense_setparam(char *str);
+
 
 #endif /* __SENSE_H */
