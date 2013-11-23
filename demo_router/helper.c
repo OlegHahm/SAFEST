@@ -9,7 +9,7 @@
 
 #include "demo.h"
 
-#define ENABLE_DEBUG    (1)
+#define ENABLE_DEBUG    (0)
 #include "debug.h"
 
 #define LL_HDR_LEN  (0x4)
@@ -57,7 +57,7 @@ void monitor(void) {
             */
             DEBUG("Packet from %u received:", last_sender);
             DEBUG("\tLQI:\t%u", p->lqi);
-            DEBUG("\tRSSI:\t%u", p->rssi);
+            DEBUG("\tRSSI:\t%i", (int8_t) p->rssi);
 
             /*
             for (uint8_t i = 0; i < p->length; i++) {
@@ -65,7 +65,7 @@ void monitor(void) {
             }
             */
             p->processing--;
-            printf("\n");
+            DEBUG("\n");
         }
         else if (m.type == IPV6_PACKET_RECEIVED) {
             ipv6_buf = (ipv6_hdr_t*) m.content.ptr;
@@ -77,17 +77,17 @@ void monitor(void) {
                 icmp_type = icmpv6_buf->type;
                 icmp_code = icmpv6_buf->code;
                 if (icmp_code == ICMP_CODE_DIO) {
-                    printf("color#6 ");
+                    printf("#color6 ");
                 }
                 else {
-                    printf("color#6 ");
+                    printf("#color6 ");
                 }
             }
             else if (ipv6_buf->nextheader == IPV6_PROTO_NUM_ICMPV6) {
-                printf("color#30 ");
+                printf("#color30 ");
             }
             else {
-                printf("color#5 ");
+                printf("#color5 ");
             }
 
             DEBUG("\t origin: %s", ipv6_addr_to_str(addr_str, &ipv6_buf->srcaddr));
