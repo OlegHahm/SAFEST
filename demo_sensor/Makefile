@@ -35,6 +35,8 @@ USEMODULE += rpl
 USEMODULE += destiny
 USEMODULE += gpioint
 
+export CFLAGAS = -DENABLE_DEBUG=1
+
 export INCLUDES = -I$(RIOTBOARD)/$(BOARD)/include -I$(RIOTBASE)/core/include -I$(RIOTCPU)/$(CPU)/include -I$(RIOTBASE)/sys/lib -I$(RIOTBASE)/sys/include/ -I$(RIOTBASE)/drivers/include/ -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/rpl -I$(RIOTBASE)/drivers/cc110x/
 
 include $(RIOTBASE)/Makefile.include

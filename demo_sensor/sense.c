@@ -16,15 +16,16 @@
 
 
 #define SENSE_STACK_SIZE		(KERNEL_CONF_STACKSIZE_DEFAULT + KERNEL_CONF_STACKSIZE_PRINTF)
-#define SAMPLING_INTERVAL		10			// interval to sample data in ms
+#define SAMPLING_INTERVAL		5			// interval to sample data in ms
 #define ACC_SENSITIVITY			256			// number of stops per G
+#define EVENT_LOCK_TICKS		3000		// 3000 * 5ms = 15s before an event can be resent
 
 // define default data threshholds for the event detection
-#define DEFAULT_THRESHOLD_1		(250U)		// threshhold for uncritical event
-#define DEFAULT_THRESHOLD_2		(350U)		// threshhold for critical event
-#define DEFAULT_COUNTER_1		(50U)		// number of thresshold crossings until non-crit event is detected
-#define DEFAULT_COUNTER_2		(50U)		// number of high threshold crossings until critical event is detected
-#define DEFAULT_TIMEOUT			(100)		// number of samping intervals until counters are reset
+#define DEFAULT_THRESHOLD_1		(270U)		// threshhold for uncritical event
+#define DEFAULT_THRESHOLD_2		(270U)		// threshhold for critical event
+#define DEFAULT_COUNTER_1		(20U)		// number of thresshold crossings until non-crit event is detected
+#define DEFAULT_COUNTER_2		(40U)		// number of high threshold crossings until critical event is detected
+#define DEFAULT_TIMEOUT			(50)		// number of samping intervals until counters are reset
 
 
 // event loop thread memory and thread id
@@ -50,6 +51,12 @@ int fsm_time = 0;
 int fsm_c1 = 0;
 int fsm_c2 = 0;
 
+// lock event reporting for some time
+int lock_evt = 0;
+int lock_crit = 0;
+int lock_counter = 0;
+
+
 /**
  * Forward function definitions
  */
@@ -74,6 +81,12 @@ void sense_thread(void)
 			SMB380_getAcceleration(SMB380_Y_AXIS, &acc_data[SMB380_Y_AXIS], &acc_data[SMB380_Y_AXIS + 3]);
 			SMB380_getAcceleration(SMB380_Z_AXIS, &acc_data[SMB380_Z_AXIS], &acc_data[SMB380_Z_AXIS + 3]);
 			fsm_process();
+			if (lock_counter > 0) {
+				--lock_counter;
+			} else {
+				lock_evt = 0;
+				lock_crit = 0;
+			}
 		}
 		hwtimer_wait(HWTIMER_TICKS(1000 * interval));
 		LED_RED_TOGGLE;
@@ -166,16 +179,25 @@ void fsm_eval(void)
 
 void evt_noncrit(void)
 {
-	udp_send("send 16 evt");
-	puts("----------- EVENT: non-critical ----------");
-	LED_GREEN_TOGGLE;
+	if (lock_evt == 0) {
+		udp_send("send 16 evt");
+		puts("----------- EVENT: non-critical ----------");
+		LED_GREEN_TOGGLE;
+		lock_counter = EVENT_LOCK_TICKS;
+		lock_evt = 1;
+	}
 }
 
 void evt_crit(void)
 {
-	udp_send("send 16 crit");
-	puts("########### EVENT: critical ##############");
-	LED_RED_TOGGLE;
+	if (lock_crit == 0) {
+		udp_send("send 16 crit");
+		puts("########### EVENT: critical ##############");
+		LED_RED_TOGGLE;
+		lock_counter = EVENT_LOCK_TICKS;
+		lock_evt = 1;
+		lock_crit = 1;
+	}
 }
 
 int16_t math_modulus(int16_t *v, int dim)

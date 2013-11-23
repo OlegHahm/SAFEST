@@ -37,6 +37,8 @@ void udp_send(char *str);
 /* helper command handlers */
 void ip(char *unused);
 
+void ignore(char *addr);
+
 extern radio_address_t id;
 extern ipv6_addr_t std_addr;
 extern char addr_str[IPV6_MAX_ADDR_STR_LEN];
