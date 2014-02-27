@@ -20,6 +20,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "rgbled.h"
 #include "periph/pwm.h"
@@ -34,8 +35,6 @@ static rgbled_t led;
 void light_init(void)
 {
     rgbled_init(&led, PWM_0, LIGHT_CH_R, LIGHT_CH_G, LIGHT_CH_B);
-    rgb_t col = {255, 0, 0};
-    rgbled_set(&led, &col);
 }
 
 void light_set_shell(int argc, char **argv)

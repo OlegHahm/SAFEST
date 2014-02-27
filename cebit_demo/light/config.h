@@ -19,7 +19,8 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-#define NODE_ADDRESS            (17U);
+#define NODE_ADDRESS            "17";
+#define RADIO_CHANNEL           3;
 
 
 #define LIGHT_COLOR_OK          {0, 255, 0}

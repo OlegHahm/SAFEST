@@ -30,6 +30,7 @@
 
 #include "demo.h"
 #include "light.h"
+#include "config.h"
 
 const shell_command_t shell_commands[] = {
     {"init", "Initialize network", rpl_udp_init},
@@ -46,15 +47,30 @@ const shell_command_t shell_commands[] = {
     {NULL, NULL, NULL}
 };
 
+void bootstrap_node(void)
+{
+    /* set the nodes address */
+    char *id = "set";
+    char *ip = NODE_ADDRESS;
+    char *arg[2];
+    arg[0] = id;
+    arg[1] = ip;
+    rpl_udp_set_id(2, arg);
+}
+
+
 int main(void)
 {
     puts("RPL router v"APP_VERSION);
 
-    /* start shell */
-    posix_open(uart0_handler_pid, 0);
+    /* bootstrap the network stack */
+    bootstrap_node();
 
     /* initialize the light */
     light_init();
+
+    /* start shell */
+    posix_open(uart0_handler_pid, 0);
 
     shell_t shell;
     shell_init(&shell, shell_commands, UART0_BUFSIZE, uart0_readc, uart0_putc);
