@@ -47,7 +47,7 @@ const shell_command_t shell_commands[] = {
 
 int main(void)
 {
-    puts("RPL router v"APP_VERSION);
+    puts("RPL portal node v"APP_VERSION);
 
     /* set the nodes address */
     char *set[] = {"set", NODE_ADDRESS};
@@ -58,7 +58,7 @@ int main(void)
     rpl_udp_init(2, init);
 
     /* start a UDP server */
-    char *server[] = {"server"}
+    char *server[] = {"server"};
     udp_server(1, server);
 
     /* start shell */

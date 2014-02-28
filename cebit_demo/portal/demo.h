@@ -5,7 +5,7 @@
 #include "radio/types.h"
 #include "destiny/socket.h"
 
-#define APP_VERSION "0.1"
+#define APP_VERSION "0.5"
 
 /**
  * Basic network configuration (addresses, channel, etc)
