@@ -7,23 +7,14 @@
 
 #define APP_VERSION "0.5"
 
+/**
+ * Basic network configuration (addresses, channel, etc)
+ */
 #define NODE_ADDRESS            "41"    // 0x29
 #define NODE_MODE               "n"     // normal node
 #define RADIO_CHANNEL           (10)
-#define GW_ADDRESS              (23U)
-
+#define GW_ADDRESS              "23"
 #define APPLICATION_PORT        0xff01
-
-/**
- * List of addresses (as strings) of nodes interested in sensor events
- */
-#define OBSERVER_NUMOF          (2U)
-#define OBSERVER_NODES          {"23", "51"}
-
-/**
- * Define the number of times each UDP packet is transmitted
- */
-#define RETRANSMISSIONS         1
 
 /**
  * Set this value to 1 when you want to send the RIOT-TV information
@@ -31,8 +22,26 @@
  */
 #define VIZ_REMOTE              1
 
+/**
+ * List of addresses (as strings) of nodes interested in sensor events
+ */
+#define OBSERVER_NUMOF          (2U)
+#define OBSERVER_NODES          {"23", "51"} // and the watch
 
+/**
+ * List a number of nodes that are ignored from this node
+ */
+#define IGNORE_NUMOF            0
+#define IGNORE_NODES            {}
 
+/**
+ * Define the number of times each UDP packet is transmitted
+ */
+#define RETRANSMISSIONS         1
+
+/**
+ * General UDP socket configuration
+ */
 #define MONITOR_STACK_SIZE      (KERNEL_CONF_STACKSIZE_MAIN)
 #define RCV_BUFFER_SIZE         (32)
 

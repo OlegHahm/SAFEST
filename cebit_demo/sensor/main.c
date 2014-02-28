@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2013 INRIA
- * Copyright (C) 2014 Freie Universität Berlin
  *
  * This file is subject to the terms and conditions of the GNU Lesser General
  * Public License. See the file LICENSE in the top level directory for more
@@ -12,7 +11,7 @@
  * @{
  *
  * @file        main.c
- * @brief       CeBIT 2014 demo - sensor node
+ * @brief       CeBIT 2014 demo application - sensor node
  *
  * @author      Oliver Hahm <oliver.hahm@inria.fr>
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
@@ -46,30 +45,27 @@ const shell_command_t shell_commands[] = {
     {NULL, NULL, NULL}
 };
 
-void bootstrap_node(void)
-{
-    char *set[] = {"set", NODE_ADDRESS};
-    rpl_udp_set_id(2, set);
-    char *init[] = {"init", NODE_MODE};
-    rpl_udp_init(2, init);
-}
 
 int main(void)
 {
-    puts("Cebit node v"APP_VERSION);
+    puts("CeBIT sensor node v"APP_VERSION);
 
-    /* setup the network stack */
-    bootstrap_node();
+    /* set the nodes address */
+    char *set[] = {"set", NODE_ADDRESS};
+    rpl_udp_set_id(2, set);
+
+    /* initialize node as normal RPL node */
+    char *init[] = {"init", NODE_MODE};
+    rpl_udp_init(2, init);
 
     /* start looking for accelerometer events */
     sense_init();
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);
-
     shell_t shell;
     shell_init(&shell, shell_commands, UART0_BUFSIZE, uart0_readc, uart0_putc);
-
     shell_run(&shell);
+
     return 0;
 }
