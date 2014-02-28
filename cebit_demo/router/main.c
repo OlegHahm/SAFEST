@@ -47,7 +47,7 @@ const shell_command_t shell_commands[] = {
 
 int main(void)
 {
-    puts("CeBIT router v"APP_VERSION);
+    puts("CeBIT router node v"APP_VERSION);
 
     // the the nodes address
     char *set[] = {"set", NODE_ADDRESS};
