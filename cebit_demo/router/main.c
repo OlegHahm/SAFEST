@@ -44,40 +44,23 @@ const shell_command_t shell_commands[] = {
     {NULL, NULL, NULL}
 };
 
-void bootstrap_node(void)
-{
-    // the the nodes address
-    char *set[] = {"set", NODE_ADDRESS};
-    rpl_udp_set_id(2, set);
-#if IGNORE_NUMOF
-    char ignore[] = IGNORE_NODES;
-    char *ign[2];
-    ign[0] = "ign";
-    for (int i = 0; i < IGNORE_NUMOF; i++) {
-        ign[1] = ignore[i];
-        rpl_udp_ignore(2, ign);
-    }
-#endif
-    char *init[] = {"init", NODE_MODE};
-    rpl_udp_init(2, init);
-#if NODE_ISSERVER
-    char *server[] = {"server"};
-    udp_server(1, server);
-#endif
-}
 
 int main(void)
 {
     puts("CeBIT router v"APP_VERSION);
 
-    /* bootstrap the network stack */
-    bootstrap_node();
+    // the the nodes address
+    char *set[] = {"set", NODE_ADDRESS};
+    rpl_udp_set_id(2, set);
+
+    /* init RPL */
+    char *init[] = {"init", NODE_MODE};
+    rpl_udp_init(2, init);
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);
     shell_t shell;
     shell_init(&shell, shell_commands, UART0_BUFSIZE, uart0_readc, uart0_putc);
-
     shell_run(&shell);
     return 0;
 }

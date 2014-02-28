@@ -2,21 +2,19 @@
 #define DEMO_H
 
 #include "kernel.h"
+#include "radio/types.h"
+#include "destiny/socket.h"
 
-#define APP_VERSION "1.1"
+#define APP_VERSION "0.5"
 
+/**
+ * Basic network configuration (addresses, channel, etc)
+ */
 #define NODE_ADDRESS            "31"
-#define RADIO_CHANNEL           (10)
-#define GW_ADDRESS              (23U)
-
 #define NODE_MODE               "n"
-
-#define IGNORE_NUMOF            0
-#define IGNORE_NODES            {}
-
+#define RADIO_CHANNEL           (10)
+#define GW_ADDRESS              "23"
 #define APPLICATION_PORT        0xff01
-
-#define NODE_ISSERVER           0
 
 /**
  * Set this value to 1 when you want to send the RIOT-TV information
@@ -24,7 +22,26 @@
  */
 #define VIZ_REMOTE              0
 
+/**
+ * List of addresses (as strings) of nodes interested in sensor events
+ */
+#define OBSERVER_NUMOF          (2U)
+#define OBSERVER_NODES          {"23", "51"}
 
+/**
+ * List a number of nodes that are ignored from this node
+ */
+#define IGNORE_NUMOF            0
+#define IGNORE_NODES            {}
+
+/**
+ * Define the number of times each UDP packet is transmitted
+ */
+#define RETRANSMISSIONS         1
+
+/**
+ * General UDP socket configuration
+ */
 #define MONITOR_STACK_SIZE      (KERNEL_CONF_STACKSIZE_MAIN)
 #define RCV_BUFFER_SIZE         (32)
 
