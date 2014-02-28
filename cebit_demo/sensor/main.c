@@ -48,7 +48,7 @@ const shell_command_t shell_commands[] = {
 
 int main(void)
 {
-    puts("CeBIT sensor node v"APP_VERSION);
+    puts("CeBIT demo - sensor node v"APP_VERSION);
 
     /* set the nodes address */
     char *set[] = {"set", NODE_ADDRESS};

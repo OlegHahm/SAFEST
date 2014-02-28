@@ -81,6 +81,9 @@ void init_udp_server(void)
         }
 
         printf("UDP packet received, payload: %s\n", buffer_main);
+        for (int i = 0; i < recsize; i++) {
+            printf("Byte %i: %i\n", i, buffer_main[i]);
+        }
 
         if (recsize >= 3) {
             uint8_t src = sa.sin6_addr.uint8[15];
@@ -136,7 +139,7 @@ void udp_send(int argc, char **argv)
         printf("Error sending packet!\n");
     }
     else {
-        printf("Successful deliverd %i bytes over UDP to %s to 6LoWPAN\n", bytes_sent, ipv6_addr_to_str(addr_str, &ipaddr));
+        printf("Successful delivered %i bytes over UDP to %s to 6LoWPAN\n", bytes_sent, ipv6_addr_to_str(addr_str, &ipaddr));
     }
 
     destiny_socket_close(sock);

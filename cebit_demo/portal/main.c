@@ -47,7 +47,7 @@ const shell_command_t shell_commands[] = {
 
 int main(void)
 {
-    puts("RPL portal node v"APP_VERSION);
+    puts("CeBIT demo - portal node v"APP_VERSION);
 
     /* set the nodes address */
     char *set[] = {"set", NODE_ADDRESS};
