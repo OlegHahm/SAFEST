@@ -1,15 +1,21 @@
 /*
  * Copyright (C) 2014 Freie Universität Berlin
  *
- * This file subject to the terms and conditions of the GNU Lesser General
+ * This file is subject to the terms and conditions of the GNU Lesser General
  * Public License. See the file LICENSE in the top level directory for more
  * details.
  */
 
 /**
- * @brief       Pseudo border router implementation based on RIOTs shell.
- * 
+ * @ingroup     cebit_demo
+ * @{
+ *
+ * @file        portal.c
+ * @brief       CeBIT 2014 demo application - portal node
+ *
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
+ *
+ * @}
  */
 
 #include <stdlib.h>
@@ -34,5 +40,5 @@ void portal_in(int argc, char** argv)
 
 void portal_out(int src, int type, int data)
 {
-    printf("FW %i %i %i", src, type, data);
+    printf("fw %i %i %i", src, type, data);
 }

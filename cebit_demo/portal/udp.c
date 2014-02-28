@@ -7,11 +7,11 @@
  */
 
 /**
- * @ingroup examples
+ * @ingroup     cebit_demo
  * @{
  *
- * @file
- * @brief UDP RPL example application
+ * @file        udp.c
+ * @brief       CeBit 2014 demo application - portal node
  *
  * @author      Oliver Hahm <oliver.hahm@inria.fr>
  *

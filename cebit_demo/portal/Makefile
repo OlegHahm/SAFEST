@@ -1,11 +1,11 @@
 # name of your application
-export PROJECT = rpl_udp
+export PROJECT = cebit_portal
 
 # If no BOARD is found in the environment, use this default:
-export BOARD ?= native
+export BOARD ?= msba2
 
 # This has to be the absolute path to the RIOT base directory:
-export RIOTBASE ?= $(CURDIR)/../..
+export RIOTBASE ?= $(CURDIR)/../../../riot/RIOT
 
 # Uncomment these lines if you want to use platform support from external
 # repositories:
@@ -38,17 +38,14 @@ USEMODULE += shell_commands
 USEMODULE += posix
 USEMODULE += ps
 USEMODULE += vtimer
-ifeq ($(strip $(BOARD)),native)
-	USEMODULE += nativenet
-else ifeq ($(strip $(BOARD)),msba2)
-	USEMODULE += cc110x
-else ifeq ($(strip $(BOARD)),iot-lab_M3)
-	USEMODULE += at86rf231
-endif
+USEMODULE += cc110x_ng
 USEMODULE += sixlowpan
 USEMODULE += rpl
 USEMODULE += destiny
 
 export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x
+
+#include events.h
+export INCLUDES += -I$(CURDIR)/..
 
 include $(RIOTBASE)/Makefile.include
