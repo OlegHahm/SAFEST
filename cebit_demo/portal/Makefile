@@ -1,11 +1,11 @@
-# name of your project
-export PROJECT = default
+# name of your application
+export PROJECT = rpl_udp
 
 # If no BOARD is found in the environment, use this default:
-export BOARD ?= msba2
+export BOARD ?= native
 
 # This has to be the absolute path to the RIOT base directory:
-export RIOTBASE ?= $(CURDIR)/../../../riot/RIOT
+export RIOTBASE ?= $(CURDIR)/../..
 
 # Uncomment these lines if you want to use platform support from external
 # repositories:
@@ -27,14 +27,28 @@ export RIOTBASE ?= $(CURDIR)/../../../riot/RIOT
 # Change this to 0 show compiler invocation lines by default:
 export QUIET ?= 1
 
+# get rid of the mandatory RPL warning
+CFLAGS += "-Wno-cpp"
+
 # Modules to include:
 
-USEMODULE += posix
+USEMODULE += auto_init
 USEMODULE += shell
 USEMODULE += shell_commands
+USEMODULE += posix
 USEMODULE += ps
 USEMODULE += vtimer
-USEMODULE += auto_init
-USEMODULE += cc110x_ng
+ifeq ($(strip $(BOARD)),native)
+	USEMODULE += nativenet
+else ifeq ($(strip $(BOARD)),msba2)
+	USEMODULE += cc110x
+else ifeq ($(strip $(BOARD)),iot-lab_M3)
+	USEMODULE += at86rf231
+endif
+USEMODULE += sixlowpan
+USEMODULE += rpl
+USEMODULE += destiny
+
+export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x
 
 include $(RIOTBASE)/Makefile.include
