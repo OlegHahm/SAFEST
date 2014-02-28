@@ -1,4 +1,4 @@
-# name of your project
+# name of your application
 export PROJECT = cebit_light
 
 # If no BOARD is found in the environment, use this default:
@@ -45,5 +45,8 @@ USEMODULE += destiny
 USEMODULE += rgbled
 
 export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x
+
+# include events.h
+export INCLUDES += -I$(CURDIR)/..
 
 include $(RIOTBASE)/Makefile.include

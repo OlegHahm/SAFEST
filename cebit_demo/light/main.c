@@ -11,7 +11,7 @@
  * @{
  *
  * @file        main.c
- * @brief       RGB-LED actuator node - main bootstrapping
+ * @brief       CeBIT 2014 demo application - light node
  *
  * @author      Oliver Hahm <oliver.hahm@inria.fr>
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
@@ -47,24 +47,22 @@ const shell_command_t shell_commands[] = {
     {NULL, NULL, NULL}
 };
 
-void bootstrap_node(void)
-{
-    /* set the nodes address */
-    char *id = "set";
-    char *ip = NODE_ADDRESS;
-    char *arg[2];
-    arg[0] = id;
-    arg[1] = ip;
-    rpl_udp_set_id(2, arg);
-}
-
 
 int main(void)
 {
     puts("RPL router v"APP_VERSION);
 
-    /* bootstrap the network stack */
-    bootstrap_node();
+    /* set the nodes address */
+    char *set[] = {"set", NODE_ADDRESS};
+    rpl_udp_set_id(2, set);
+
+    /* start the node as normal RPL node */
+    char *init[] = {"init", NODE_MODE};
+    rpl_udp_init(2, init);
+
+    /* start the UDP server */
+    char *server[] = {"server"};
+    udp_server(1, server);
 
     /* initialize the light */
     light_init();

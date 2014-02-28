@@ -11,9 +11,11 @@
  * @{
  *
  * @file        light.h
- * @brief       RGB-LED actuator node
+ * @brief       CeBIT 2014 demo application - light node
  *
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
+ *
+ * @}
  */
 
 #ifndef __LIGHT_H
@@ -21,6 +23,8 @@
 
 
 void light_init(void);
+
+void light_recv_cmd(int src, char id, char data, char sequ);
 
 void light_set_shell(int argc, char **argv);
 

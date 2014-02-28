@@ -11,7 +11,7 @@
  * @{
  *
  * @file        light.c
- * @brief       RGB-LED actuator node
+ * @brief       CeBIT 2014 demo application - light node
  *
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  *
@@ -26,7 +26,7 @@
 #include "periph/pwm.h"
 
 #include "light.h"
-#include "config.h"
+#include "demo.h"
 
 
 static rgbled_t led;
@@ -35,6 +35,11 @@ static rgbled_t led;
 void light_init(void)
 {
     rgbled_init(&led, PWM_0, LIGHT_CH_R, LIGHT_CH_G, LIGHT_CH_B);
+}
+
+void light_recv_cmd(int src, char id, char data, char sequ)
+{
+    printf("Got new command from %i: id(%i), data(%i), seq(%i)\n", src, id, data, sequ);
 }
 
 void light_set_shell(int argc, char **argv)
