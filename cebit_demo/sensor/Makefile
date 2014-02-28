@@ -1,4 +1,4 @@
-# name of your project
+# name of your application
 export PROJECT = cebit_sensor
 
 # If no BOARD is found in the environment, use this default:
@@ -27,24 +27,25 @@ export RIOTBASE ?= $(CURDIR)/../../../riot/RIOT
 # Change this to 0 show compiler invocation lines by default:
 export QUIET ?= 1
 
+# get rid of the mandatory RPL warning
+CFLAGS += "-Wno-cpp"
+
 # Modules to include:
 
 USEMODULE += auto_init
-USEMODULE += posix
 USEMODULE += shell
 USEMODULE += shell_commands
+USEMODULE += posix
 USEMODULE += ps
 USEMODULE += vtimer
-ifneq (,$(filter msba2,$(BOARD)))
-	USEMODULE += sht11
-	USEMODULE += ltc4150
-	USEMODULE += rtc
-	USEMODULE += mci
-	USEMODULE += cc110x_ng
-	USEMODULE += config
-	USEMODULE += random
-endif
 USEMODULE += cc110x_ng
+USEMODULE += sixlowpan
+USEMODULE += rpl
+USEMODULE += destiny
 
+export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x
+
+#include events.h
+export INCLUDES += -I$(CURDIR)/..
 
 include $(RIOTBASE)/Makefile.include

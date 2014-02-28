@@ -1,168 +1,74 @@
 /*
- * Copyright (C) 2008, 2009, 2010  Kaspar Schleiser <kaspar@schleiser.de>
  * Copyright (C) 2013 INRIA
- * Copyright (C) 2013 Ludwig Ortmann <ludwig.ortmann@fu-berlin.de>
+ * Copyright (C) 2014 Freie Universität Berlin
  *
- * This file subject to the terms and conditions of the GNU Lesser General
+ * This file is subject to the terms and conditions of the GNU Lesser General
  * Public License. See the file LICENSE in the top level directory for more
  * details.
  */
 
 /**
- * @ingroup     examples
+ * @ingroup     cebit_demo
  * @{
  *
- * @file
- * @brief       Default application that shows a lot of functionality of RIOT
+ * @file        main.c
+ * @brief       CeBIT 2014 demo - sensor node
  *
- * @author      Kaspar Schleiser <kaspar@schleiser.de>
  * @author      Oliver Hahm <oliver.hahm@inria.fr>
- * @author      Ludwig Ortmann <ludwig.ortmann@fu-berlin.de>
+ * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  *
  * @}
  */
 
 #include <stdio.h>
-#include <string.h>
 
-#include "thread.h"
-#include "hwtimer.h"
-#include "vtimer.h"
 #include "posix_io.h"
 #include "shell.h"
 #include "shell_commands.h"
 #include "board_uart0.h"
+#include "destiny.h"
+#include "kernel.h"
 
+#include "demo.h"
+#include "config.h"
 #include "sense.h"
 
-#ifdef MODULE_LTC4150
-#include <ltc4150.h>
-#endif
+const shell_command_t shell_commands[] = {
+    {"init", "Initialize network", rpl_udp_init},
+    {"set", "Set ID", rpl_udp_set_id},
+    {"table", "Shows the routing table", rpl_udp_table},
+    {"dodag", "Shows the dodag", rpl_udp_dodag},
+    {"loop", "", rpl_udp_loop},
+    {"server", "Starts a UDP server", udp_server},
+    {"send", "Send a UDP datagram", udp_send},
+    {"ip", "Print all assigned IP addresses", rpl_udp_ip},
+    {"ign", "ignore node", rpl_udp_ignore},
+    {NULL, NULL, NULL}
+};
 
-#ifdef MODULE_TRANSCEIVER
-#include <transceiver.h>
-#endif
-
-#define SND_BUFFER_SIZE     (100)
-#define RCV_BUFFER_SIZE     (64)
-#define RADIO_STACK_SIZE    (KERNEL_CONF_STACKSIZE_DEFAULT)
-
-#ifdef MODULE_TRANSCEIVER
-
-
-
-
-extern void _transceiver_get_set_address_handler(char *addr);
-
-
-char radio_stack_buffer[RADIO_STACK_SIZE];
-msg_t msg_q[RCV_BUFFER_SIZE];
-
-void radio(void)
+void bootstrap_node(void)
 {
-    msg_t m;
-    radio_packet_t *p;
-    radio_packet_length_t i;
-
-    msg_init_queue(msg_q, RCV_BUFFER_SIZE);
-
-    while (1) {
-        msg_receive(&m);
-
-        if (m.type == PKT_PENDING) {
-            p = (radio_packet_t *) m.content.ptr;
-            printf("Got radio packet:\n");
-            printf("\tLength:\t%u\n", p->length);
-            printf("\tSrc:\t%u\n", p->src);
-            printf("\tDst:\t%u\n", p->dst);
-            printf("\tLQI:\t%u\n", p->lqi);
-            printf("\tRSSI:\t%u\n", p->rssi);
-
-            for (i = 0; i < p->length; i++) {
-                printf("%02X ", p->data[i]);
-            }
-
-            p->processing--;
-            puts("\n");
-        }
-        else if (m.type == ENOBUFFER) {
-            puts("Transceiver buffer full");
-        }
-        else {
-            puts("Unknown packet received");
-        }
-    }
-}
-
-void init_transceiver(void)
-{
-    int radio_pid = thread_create(
-                        radio_stack_buffer,
-                        RADIO_STACK_SIZE,
-                        PRIORITY_MAIN - 2,
-                        CREATE_STACKTEST,
-                        radio,
-                        "radio");
-
-    uint16_t transceivers = 0;
-#ifdef MODULE_CC110X
-    transceivers |= TRANSCEIVER_CC1100;
-#endif
-#ifdef MODULE_CC110X_NG
-    transceivers |= TRANSCEIVER_CC1100;
-#endif
-#ifdef MODULE_CC2420
-    transceivers |= TRANSCEIVER_CC2420;
-#endif
-#ifdef MODULE_NATIVENET
-    transceivers |= TRANSCEIVER_NATIVE;
-#endif
-#ifdef MODULE_AT86RF231
-    transceivers |= TRANSCEIVER_AT86RF231;
-#endif
-#ifdef MODULE_MC1322X
-    transceivers |= TRANSCEIVER_MC1322X;
-#endif
-
-    transceiver_init(transceivers);
-    (void) transceiver_start();
-    transceiver_register(transceivers, radio_pid);
-}
-#endif /* MODULE_TRANSCEIVER */
-
-static int shell_readc(void)
-{
-    char c = 0;
-    (void) posix_read(uart0_handler_pid, &c, 1);
-    return c;
-}
-
-static void shell_putchar(int c)
-{
-    (void) putchar(c);
+    char *set[] = {"set", NODE_ADDRESS};
+    rpl_udp_set_id(2, set);
+    char *init[] = {"init", NODE_MODE};
+    rpl_udp_init(2, init);
 }
 
 int main(void)
 {
-    shell_t shell;
-    (void) posix_open(uart0_handler_pid, 0);
+    puts("Cebit node v"APP_VERSION);
 
-#ifdef MODULE_LTC4150
-    ltc4150_start();
-#endif
+    /* setup the network stack */
+    bootstrap_node();
 
-#ifdef MODULE_TRANSCEIVER
-    init_transceiver();
-#endif
-
-    (void) puts("Welcome to RIOT!");
-
+    /* start looking for accelerometer events */
     sense_init();
 
-    // init transceiver
-    _transceiver_get_set_address_handler("15");
+    /* start shell */
+    posix_open(uart0_handler_pid, 0);
 
-    shell_init(&shell, NULL, UART0_BUFSIZE, shell_readc, shell_putchar);
+    shell_t shell;
+    shell_init(&shell, shell_commands, UART0_BUFSIZE, uart0_readc, uart0_putc);
 
     shell_run(&shell);
     return 0;

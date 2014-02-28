@@ -5,26 +5,24 @@
 #include "thread.h"
 #include "smb380-board.h"
 #include "vtimer.h"
+#include "kernel.h"
+#include "board.h"
 
 #include "sense.h"
+#include "evt_handler.h"
 
 
-#define EVT_NORM        'a'
-#define EVT_WARN        'b'
-#define EVT_CRIT        'c'
-
-
-#define STACKSIZE           (4098U)
-#define PRIO                (10U)
+#define THREAD_PRIO         (10U)
 
 #define AXIS_THRESHOLD      (230)
 #define SAMPLING_PERIOD     (50000U)
 #define REP_LIMIT           (3U)
 
-#define STATE_NORMAL        (1U)
-#define STATE_DOWN1         (0U)
-#define STATE_DOWN2         (2U)
+#define STATE_NORMAL        (0U)
+#define STATE_DOWN1         (2U)
+#define STATE_DOWN2         (1U)
 
+#define STACKSIZE           KERNEL_CONF_STACKSIZE_MAIN
 
 static char stack[STACKSIZE];
 static int sensepid;
@@ -79,25 +77,15 @@ void check_state(void)
     
     if (rep_count == REP_LIMIT) {
         ++rep_count;
-        char data[2];
         switch (state) {
             case STATE_NORMAL:
-                printf("EVENT: all ok [%i]\n", acc_data[STATE_NORMAL]);
-                data[0] = EVT_NORM;
-                data[1] = '0';
-                _transceiver_send_handler(data);
+                evt_handler_ok();
                 break;
             case STATE_DOWN1:
-                printf("EVENT: intrusion [%i]\n", acc_data[STATE_DOWN1]);
-                data[0] = EVT_CRIT;
-                data[1] = '1';
-                _transceiver_send_handler(data);
+                evt_handler_warn();
                 break;
             case STATE_DOWN2:
-                printf("EVENT: warning [%i]\n", acc_data[STATE_DOWN2]);
-                data[0] = EVT_WARN;
-                data[1] = '2';
-                _transceiver_send_handler(data);
+                evt_handler_alarm();
                 break;
         }
     }
@@ -111,7 +99,7 @@ void sense_init(void)
     puts("SMB380 initialized.");
 
     // setup and start sense thread
-    sensepid = thread_create(stack, STACKSIZE, PRIO, CREATE_STACKTEST, sensethread, "sense");
+    sensepid = thread_create(stack, STACKSIZE, THREAD_PRIO, CREATE_STACKTEST, sensethread, "sense");
     puts("Sense thread created.");
 }
 
