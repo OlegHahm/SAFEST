@@ -26,7 +26,7 @@
  * List of addresses (as strings) of nodes interested in sensor events
  */
 #define OBSERVER_NUMOF          (2U)
-#define OBSERVER_NODES          {"23", "51"} // and the watch
+#define OBSERVER_NODES          {23, 51} // and the watch
 
 /**
  * List a number of nodes that are ignored from this node
@@ -70,10 +70,6 @@ void rpl_udp_table(int argc, char **argv);
  * @brief   Shows the dodag
  */
 void rpl_udp_dodag(int argc, char **argv);
-
-/* UDP shell command handlers */
-void udp_server(int argc, char **argv);
-void udp_send(int argc, char **argv);
 
 /* helper command handlers */
 void rpl_udp_ip(int argc, char **argv);

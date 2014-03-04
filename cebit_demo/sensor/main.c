@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 
+#include "net_if.h"
 #include "posix_io.h"
 #include "shell.h"
 #include "shell_commands.h"
@@ -29,7 +30,7 @@
 #include "kernel.h"
 
 #include "demo.h"
-#include "config.h"
+#include "udp.h"
 #include "sense.h"
 
 const shell_command_t shell_commands[] = {
@@ -38,9 +39,8 @@ const shell_command_t shell_commands[] = {
     {"table", "Shows the routing table", rpl_udp_table},
     {"dodag", "Shows the dodag", rpl_udp_dodag},
     {"loop", "", rpl_udp_loop},
-    {"server", "Starts a UDP server", udp_server},
-    {"send", "Send a UDP datagram", udp_send},
-    {"ip", "Print all assigned IP addresses", rpl_udp_ip},
+    {"server", "Starts a UDP server", udp_shell_server},
+    {"send", "Send a UDP datagram", udp_shell_send},
     {"ign", "ignore node", rpl_udp_ignore},
     {NULL, NULL, NULL}
 };
@@ -57,6 +57,13 @@ int main(void)
     /* initialize node as normal RPL node */
     char *init[] = {"init", NODE_MODE};
     rpl_udp_init(2, init);
+
+    /* set ignore nodes */
+    char *nodes[] = IGNORE_NODES;
+    for (int i = 0; i < IGNORE_NUMOF; i++) {
+        char *ign[] = {"ign", nodes[i]};
+        rpl_udp_ignore(2, ign);
+    }
 
     /* start looking for accelerometer events */
     sense_init();

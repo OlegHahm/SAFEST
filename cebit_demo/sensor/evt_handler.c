@@ -23,9 +23,10 @@
 #include "evt_handler.h"
 #include "demo.h"
 #include "events.h"
+#include "udp.h"
 
-static int sequ_no = 0;
-static char *observers[] = OBSERVER_NODES;
+static uint8_t sequ_no = 0;
+static uint16_t observers[] = OBSERVER_NODES;
 
 void send_event(evt_t event);
 
@@ -66,8 +67,7 @@ void send_event(evt_t event)
     cmd[2] = (char)sequ_no++;  // sequence number
     for (int retrans = 0; retrans < RETRANSMISSIONS; retrans++) {
         for (int i = 0; i < OBSERVER_NUMOF; i++) {
-            char *send[] = {"send", observers[i], cmd};
-            udp_send(3, send);
+            udp_send(observers[i], APPLICATION_PORT, cmd, 3);
         }
     }
 }
