@@ -30,117 +30,188 @@
 #include "destiny/socket.h"
 #include "net_help.h"
 
+#include "udp.h"
 #include "demo.h"
-#include "light.h"
-#include "config.h"
-#include "viz.h"
+
+#define SHELL_PORT          (0xf0f0)
 
 #define UDP_BUFFER_SIZE     (128)
 
-char udp_server_stack_buffer[KERNEL_CONF_STACKSIZE_MAIN];
-char addr_str[IPV6_MAX_ADDR_STR_LEN];
+static int socket = -1;
+static sockaddr6_t socket_addr;
 
-void init_udp_server(void);
+static char server_stack[KERNEL_CONF_STACKSIZE_MAIN];
+static int server_socket = -1;
+static sockaddr6_t server_addr;
+static void(*server_on_data)(uint16_t src_addr, char* data, int length);
+
+
+void init_send_socket(void);
+void server_loop(void);
+void default_data_handler(uint16_t src, char *data, int length);
+void get_ipv6_address(ipv6_addr_t *addr, uint16_t local_addr);
+
+
 
 /* UDP server thread */
-void udp_server(int argc, char **argv)
+void udp_shell_server(int argc, char **argv)
 {
-    (void) argc;
-    (void) argv;
+    uint16_t port;
 
-    int udp_server_thread_pid = thread_create(udp_server_stack_buffer, KERNEL_CONF_STACKSIZE_MAIN, PRIORITY_MAIN, CREATE_STACKTEST, init_udp_server, "init_udp_server");
-    printf("UDP SERVER ON PORT %d (THREAD PID: %d)\n", HTONS(APPLICATION_PORT), udp_server_thread_pid);
-}
-
-void init_udp_server(void)
-{
-    sockaddr6_t sa;
-    char buffer_main[UDP_BUFFER_SIZE];
-    int32_t recsize;
-    uint32_t fromlen;
-    int sock = destiny_socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
-
-    memset(&sa, 0, sizeof(sa));
-
-    sa.sin6_family = AF_INET;
-    sa.sin6_port = HTONS(APPLICATION_PORT);
-
-    fromlen = sizeof(sa);
-
-    if (-1 == destiny_socket_bind(sock, &sa, sizeof(sa))) {
-        printf("Error bind failed!\n");
-        destiny_socket_close(sock);
+    // check command line arguments
+    if (argc < 2) {
+        port = SHELL_PORT;
+    } else {
+        port = (uint16_t)atoi(argv[1]);
     }
 
-    while (1) {
-        recsize = destiny_socket_recvfrom(sock, (void *)buffer_main, UDP_BUFFER_SIZE, 0,
-                                          &sa, &fromlen);
-
-        if (recsize < 0) {
-            printf("ERROR: recsize < 0!\n");
-        }
-
-        printf("UDP packet received, payload: %s\n", buffer_main);
-        for (int i = 0; i < recsize; i++) {
-            printf("Byte %i: %i\n", i, buffer_main[i]);
-        }
-
-        if (recsize >= 3) {
-            uint8_t src = sa.sin6_addr.uint8[15];
-            light_recv_cmd(src, buffer_main[0], buffer_main[1], buffer_main[2]);
-
-            viz_udp_pkt();
-        }
-    }
-
-    destiny_socket_close(sock);
+    udp_start_server(port, default_data_handler);
 }
 
-/* UDP send command */
-void udp_send(int argc, char **argv)
+/* send UDP datagram from shell */
+void udp_shell_send(int argc, char **argv)
 {
-    int sock;
-    sockaddr6_t sa;
-    ipv6_addr_t ipaddr;
-    int bytes_sent;
-    int address;
-    char text[5];
+    uint8_t dst_addr;
+    size_t length;
 
+    // check parameters
     if (argc != 3) {
         printf("usage: send <addr> <text>\n");
         return;
     }
 
-    address = atoi(argv[1]);
+    // parse dst address and data length
+    dst_addr = (uint8_t)atoi(argv[1]);
+    length = strlen(argv[2]);
 
-    strncpy(text, argv[2], sizeof (text));
-    text[sizeof (text) - 1] = 0;
+    // send packet
+    udp_send(dst_addr, SHELL_PORT, argv[2], length);
+}
 
-    sock = destiny_socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
+/* send data via UDP */
+int udp_send(uint16_t dst_addr, uint16_t port, char *data, int length)
+{
+    ipv6_addr_t dst;
+    int bytes_send;
 
-    if (-1 == sock) {
-        printf("Error Creating Socket!");
+    if (socket < 0) {
+        init_send_socket();
+        if (socket < 0) {           // UGLY, something better here?!
+            puts("Error sending data - unable to open sending socket");
+        }
+    }
+
+    // set receiver address
+    get_ipv6_address(&dst, dst_addr);
+    // write address and port to socket address
+    memcpy(&socket_addr.sin6_addr, &dst, sizeof(ipv6_addr_t));
+    socket_addr.sin6_port = HTONS(port);
+
+    // send data
+    bytes_send = destiny_socket_sendto(socket, data, length, 0, &socket_addr, sizeof(sockaddr6_t));
+
+    if (bytes_send < 0) {
+        printf("Error: Sending data to %i failed, bytes_send < 0\n", dst_addr);
+    } else {
+        printf("Successful delivered %i bytes over UDP to %i\n", bytes_send, dst_addr);
+    }
+    return bytes_send;
+}
+
+/* start a new UDP server on given port */
+void udp_start_server(uint16_t port, void(*ondata)(uint16_t src, char *data, int length))
+{
+    // allow only one server running at the same time - TODO this sucks, enable more then one!
+    if (server_socket > 0) {
+        printf("Error: UDP server already running\n");
         return;
     }
 
-    memset(&sa, 0, sizeof sa);
-
-    ipv6_addr_init(&ipaddr, 0xabcd, 0x0, 0x0, 0x0, 0x3612, 0x00ff, 0xfe00, (uint16_t)address);
-
-    sa.sin6_family = AF_INET;
-    memcpy(&sa.sin6_addr, &ipaddr, 16);
-    sa.sin6_port = HTONS(APPLICATION_PORT);
-
-    bytes_sent = destiny_socket_sendto(sock, (char *)text,
-                                       strlen(text) + 1, 0, &sa,
-                                       sizeof sa);
-
-    if (bytes_sent < 0) {
-        printf("Error sending packet!\n");
-    }
-    else {
-        printf("Successful delivered %i bytes over UDP to %s to 6LoWPAN\n", bytes_sent, ipv6_addr_to_str(addr_str, &ipaddr));
+    // open server socket
+    server_socket = destiny_socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
+    if (server_socket < 0) {
+        printf("Error: Unable to open UDP server socket\n");
     }
 
-    destiny_socket_close(sock);
+    // set server address
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin6_family = AF_INET;
+    server_addr.sin6_port = HTONS(port);
+
+    // bind server socket
+    if (-1 == destiny_socket_bind(server_socket, &server_addr, sizeof(server_addr))) {
+        printf("Error: Binding the server socket failed!\n");
+        destiny_socket_close(server_socket);
+    }
+
+    // set on data callback
+    server_on_data = ondata;
+
+    // start server thread
+    int udp_server_thread_pid = thread_create(server_stack,
+                                              KERNEL_CONF_STACKSIZE_MAIN, 
+                                              PRIORITY_MAIN, 
+                                              CREATE_STACKTEST, 
+                                              server_loop, 
+                                              "udp_server");
+    printf("UDP server started on port %d (Thread PID: %d)\n", port, udp_server_thread_pid);
+}
+
+
+void server_loop(void)
+{
+    int bytes_received;
+    char receive_buffer[UDP_BUFFER_SIZE];
+    sockaddr6_t src_addr;
+    socklen_t fromlen = sizeof(src_addr);
+    uint16_t src_local_addr;
+
+    // listen for data
+    while (1) {
+        bytes_received = destiny_socket_recvfrom(server_socket,
+                                                (void *)receive_buffer, 
+                                                UDP_BUFFER_SIZE, 
+                                                0,
+                                                &src_addr, 
+                                                &fromlen);
+        if (bytes_received < 0) {      // receive error
+            printf("ERROR: UDP server bytes_received < 0!\n");
+        } else {                // handle received data
+            src_local_addr = src_addr.sin6_addr.uint16[7];
+            server_on_data(src_local_addr, receive_buffer, bytes_received);
+            printf("UDP: received %i bytes from %i\n", bytes_received, src_local_addr);
+        }
+    }
+}
+
+void default_data_handler(uint16_t src, char *data, int length)
+{
+    printf("UDP packet received - from: [%i] - length: [%i bytes]\n", src, length);
+    printf("Data: ");
+    for (int i = 0; i < length; i++) {
+        printf("%X ", data[i]);
+    }
+    printf("\n");
+}
+
+void init_send_socket(void)
+{
+    // open a new UDP socket
+    socket = destiny_socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
+
+    if (socket == -1) {
+        puts("Error creating sending socket!");
+        return;
+    }
+
+    // pre-configure the socket's address
+    memset(&socket_addr, 0, sizeof(socket_addr));
+    socket_addr.sin6_family = AF_INET;
+
+    printf("Successfully opened sending socket\n");
+}
+
+void get_ipv6_address(ipv6_addr_t *addr, uint16_t local_addr)
+{
+    ipv6_addr_init(addr, 0xabcd, 0x0, 0x0, 0x0, 0x3612, 0x00ff, 0xfe00, local_addr);
 }

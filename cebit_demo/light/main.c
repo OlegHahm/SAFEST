@@ -29,8 +29,8 @@
 #include "kernel.h"
 
 #include "demo.h"
+#include "udp.h"
 #include "light.h"
-#include "config.h"
 
 const shell_command_t shell_commands[] = {
     {"init", "Initialize network", rpl_udp_init},
@@ -38,9 +38,8 @@ const shell_command_t shell_commands[] = {
     {"table", "Shows the routing table", rpl_udp_table},
     {"dodag", "Shows the dodag", rpl_udp_dodag},
     {"loop", "", rpl_udp_loop},
-    {"server", "Starts a UDP server", udp_server},
-    {"send", "Send a UDP datagram", udp_send},
-    {"ip", "Print all assigned IP addresses", rpl_udp_ip},
+    {"server", "Starts a UDP server", udp_shell_server},
+    {"send", "Send a UDP datagram", udp_shell_send},
     {"ign", "ignore node", rpl_udp_ignore},
     {"color", "Set a color [r] [g] [b]", light_set_shell},
     {"light-off", "Turn off the light", light_off_shell},
@@ -62,7 +61,7 @@ int main(void)
 
     /* start the UDP server */
     char *server[] = {"server"};
-    udp_server(1, server);
+    udp_shell_server(1, server);
 
     /* initialize the light */
     light_init();
