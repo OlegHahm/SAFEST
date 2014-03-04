@@ -26,7 +26,7 @@
  * List of addresses (as strings) of nodes interested in sensor events
  */
 #define OBSERVER_NUMOF          (2U)
-#define OBSERVER_NODES          {"51"} // and the watch
+#define OBSERVER_NODES          {51} // and the watch
 
 /**
  * List a number of nodes that are ignored from this node

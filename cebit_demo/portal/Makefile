@@ -38,10 +38,17 @@ USEMODULE += shell_commands
 USEMODULE += posix
 USEMODULE += ps
 USEMODULE += vtimer
-USEMODULE += cc110x_ng
+# USEMODULE += cc110x_ng
 USEMODULE += sixlowpan
 USEMODULE += rpl
 USEMODULE += destiny
+ifeq ($(strip $(BOARD)),native)
+	USEMODULE += nativenet
+else ifeq ($(strip $(BOARD)),msba2)
+	USEMODULE += cc110x_ng
+else ifeq ($(strip $(BOARD)),avsextrem)
+	USEMODULE += cc110x_ng
+endif
 
 export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x
 

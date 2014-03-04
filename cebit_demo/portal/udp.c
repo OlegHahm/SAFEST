@@ -14,6 +14,7 @@
  * @brief       CeBit 2014 demo application - portal node
  *
  * @author      Oliver Hahm <oliver.hahm@inria.fr>
+ * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  *
  * @}
  */
@@ -110,7 +111,7 @@ int udp_send(uint16_t dst_addr, uint16_t port, char *data, int length)
     bytes_send = destiny_socket_sendto(socket, data, length, 0, &socket_addr, sizeof(sockaddr6_t));
 
     if (bytes_send < 0) {
-        printf("Error: Sending data to %i failed", dst_addr);
+        printf("Error: Sending data to %i failed, bytes_send < 0\n", dst_addr);
     } else {
         printf("Successful delivered %i bytes over UDP to %i\n", bytes_send, dst_addr);
     }
@@ -178,6 +179,7 @@ void server_loop(void)
         } else {                // handle received data
             src_local_addr = src_addr.sin6_addr.uint16[7];
             server_on_data(src_local_addr, receive_buffer, bytes_received);
+            printf("UDP: received %i bytes from %i\n", bytes_received, src_local_addr);
         }
     }
 }
