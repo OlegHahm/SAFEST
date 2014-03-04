@@ -24,7 +24,7 @@
 
 void portal_in(int argc, char** argv);
 
-void portal_out(int src, int type, int data);
+void portal_out(uint16_t src, char* data, int length);
 
 
 #endif /* __PORTAL_H */

@@ -30,6 +30,7 @@
 #include "net_help.h"
 
 #include "udp.h"
+#include "demo.h"
 
 #define SHELL_PORT          (0xf0f0)
 
@@ -154,7 +155,7 @@ void udp_start_server(uint16_t port, void(*ondata)(uint16_t src, char *data, int
                                               CREATE_STACKTEST, 
                                               server_loop, 
                                               "udp_server");
-    printf("UDP SERVER ON PORT %d (THREAD PID: %d)\n", HTONS(APPLICATION_PORT), udp_server_thread_pid);
+    printf("UDP server started on port %d (Thread PID: %d)\n", port, udp_server_thread_pid);
 }
 
 

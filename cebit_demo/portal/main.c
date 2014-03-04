@@ -59,8 +59,7 @@ int main(void)
     rpl_udp_init(2, init);
 
     /* start a UDP server */
-    char *server[] = {"server"};
-    udp_shell_server(1, server);
+    udp_start_server(APPLICATION_PORT, portal_out);
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);
