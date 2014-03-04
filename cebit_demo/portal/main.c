@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 
+#include "net_if.h"
 #include "posix_io.h"
 #include "shell.h"
 #include "shell_commands.h"
@@ -39,7 +40,6 @@ const shell_command_t shell_commands[] = {
     {"loop", "", rpl_udp_loop},
     {"server", "Starts a UDP server", udp_server},
     {"send", "Send a UDP datagram", udp_send},
-    {"ip", "Print all assigned IP addresses", rpl_udp_ip},
     {"ign", "ignore node", rpl_udp_ignore},
     {"fw", "fw an event into the net", portal_in},
     {NULL, NULL, NULL}

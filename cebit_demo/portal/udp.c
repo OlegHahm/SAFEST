@@ -26,18 +26,19 @@
 
 #include "kernel.h"
 #include "thread.h"
-
 #include "destiny/socket.h"
-
 #include "net_help.h"
 
 #include "demo.h"
 
 #define UDP_BUFFER_SIZE     (128)
-#define SERVER_PORT     (0xFF01)
 
 char udp_server_stack_buffer[KERNEL_CONF_STACKSIZE_MAIN];
 char addr_str[IPV6_MAX_ADDR_STR_LEN];
+
+static int socket = 0;
+
+
 
 void init_udp_server(void);
 
@@ -48,7 +49,7 @@ void udp_server(int argc, char **argv)
     (void) argv;
 
     int udp_server_thread_pid = thread_create(udp_server_stack_buffer, KERNEL_CONF_STACKSIZE_MAIN, PRIORITY_MAIN, CREATE_STACKTEST, init_udp_server, "init_udp_server");
-    printf("UDP SERVER ON PORT %d (THREAD PID: %d)\n", HTONS(SERVER_PORT), udp_server_thread_pid);
+    printf("UDP SERVER ON PORT %d (THREAD PID: %d)\n", HTONS(APPLICATION_PORT), udp_server_thread_pid);
 }
 
 void init_udp_server(void)
@@ -62,7 +63,7 @@ void init_udp_server(void)
     memset(&sa, 0, sizeof(sa));
 
     sa.sin6_family = AF_INET;
-    sa.sin6_port = HTONS(SERVER_PORT);
+    sa.sin6_port = HTONS(APPLICATION_PORT);
 
     fromlen = sizeof(sa);
 
@@ -83,6 +84,35 @@ void init_udp_server(void)
     }
 
     destiny_socket_close(sock);
+}
+
+void udp_init(void)
+{
+
+
+    // open a new UDP socket
+    socket = destiny_socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
+
+    if (socket == -1) {
+        printf("Error creating sending socket!");
+        return;
+    }
+
+
+
+}
+
+void udp_send_short(uint8_t dst_addr, char *data, size_t lenght)
+{
+    ipv6_addr_t dst;
+
+    get_ip_address(&dst, dst_addr);
+
+}
+
+void get_ip_address(ipv6_addr_t *addr, uint8_t local_addr)
+{
+    ipv6_addr_init(&ipaddr, 0xabcd, 0x0, 0x0, 0x0, 0x3612, 0x00ff, 0xfe00, (uint16_t)local_addr);
 }
 
 /* UDP send command */
@@ -118,7 +148,7 @@ void udp_send(int argc, char **argv)
 
     sa.sin6_family = AF_INET;
     memcpy(&sa.sin6_addr, &ipaddr, 16);
-    sa.sin6_port = HTONS(SERVER_PORT);
+    sa.sin6_port = HTONS(APPLICATION_PORT);
 
     bytes_sent = destiny_socket_sendto(sock, (char *)text,
                                        strlen(text) + 1, 0, &sa,
@@ -128,7 +158,8 @@ void udp_send(int argc, char **argv)
         printf("Error sending packet!\n");
     }
     else {
-        printf("Successful deliverd %i bytes over UDP to %s to 6LoWPAN\n", bytes_sent, ipv6_addr_to_str(addr_str, &ipaddr));
+        printf("Successful delivered %i bytes over UDP to %s to 6LoWPAN\n", 
+               bytes_sent, ipv6_addr_to_str(addr_str, IPV6_MAX_ADDR_STR_LEN, &ipaddr));
     }
 
     destiny_socket_close(sock);
