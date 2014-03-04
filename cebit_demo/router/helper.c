@@ -39,14 +39,7 @@ extern uint8_t ipv6_ext_hdr_len;
 
 msg_t msg_q[RCV_BUFFER_SIZE];
 
-/* prints current IPv6 adresses */
-void rpl_udp_ip(int argc, char **argv)
-{
-    (void) argc;
-    (void) argv;
 
-    ipv6_iface_print_addrs();
-}
 
 void rpl_udp_set_id(int argc, char **argv)
 {
@@ -95,7 +88,8 @@ void rpl_udp_monitor(void)
         else if (m.type == IPV6_PACKET_RECEIVED) {
             ipv6_buf = (ipv6_hdr_t *) m.content.ptr;
             printf("IPv6 datagram received (next header: %02X)", ipv6_buf->nextheader);
-            printf(" from %s ", ipv6_addr_to_str(addr_str, &ipv6_buf->srcaddr));
+            printf(" from %s ", ipv6_addr_to_str(addr_str, IPV6_MAX_ADDR_STR_LEN, &ipv6_buf->srcaddr));
+
 
             if (ipv6_buf->nextheader == IPV6_PROTO_NUM_ICMPV6) {
                 icmpv6_buf = (icmpv6_hdr_t *) &ipv6_buf[(LL_HDR_LEN + IPV6_HDR_LEN) + ipv6_ext_hdr_len];
@@ -146,3 +140,4 @@ void rpl_udp_ignore(int argc, char **argv)
         printf("Usage: %s <addr>\n", argv[0]);
     }
 }
+
