@@ -36,8 +36,6 @@
 
 #define UDP_BUFFER_SIZE     (128)
 
-char addr_str[IPV6_MAX_ADDR_STR_LEN];
-
 static int socket = -1;
 static sockaddr6_t socket_addr;
 

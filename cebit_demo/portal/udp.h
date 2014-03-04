@@ -13,7 +13,6 @@
  * @file        udp.h
  * @brief       CeBIT 2014 demo application - portal node
  *
- * @author      Oliver Hahm <oliver.hahm@inria.fr>
  * @author      Hauke Petersen <hauke.petersen@fu-berlin.de>
  *
  * @}

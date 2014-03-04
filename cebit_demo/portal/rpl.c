@@ -38,6 +38,7 @@
 char monitor_stack_buffer[MONITOR_STACK_SIZE];
 radio_address_t id;
 ipv6_addr_t std_addr;
+char addr_str[IPV6_MAX_ADDR_STR_LEN];
 
 uint8_t is_root = 0;
 
