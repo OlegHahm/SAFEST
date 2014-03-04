@@ -30,6 +30,7 @@
 #include "kernel.h"
 
 #include "demo.h"
+#include "udp.h"
 #include "portal.h"
 
 const shell_command_t shell_commands[] = {
@@ -38,8 +39,8 @@ const shell_command_t shell_commands[] = {
     {"table", "Shows the routing table", rpl_udp_table},
     {"dodag", "Shows the dodag", rpl_udp_dodag},
     {"loop", "", rpl_udp_loop},
-    {"server", "Starts a UDP server", udp_server},
-    {"send", "Send a UDP datagram", udp_send},
+    {"server", "Starts a UDP server", udp_shell_server},
+    {"send", "Send a UDP datagram", udp_shell_send},
     {"ign", "ignore node", rpl_udp_ignore},
     {"fw", "fw an event into the net", portal_in},
     {NULL, NULL, NULL}
@@ -59,7 +60,7 @@ int main(void)
 
     /* start a UDP server */
     char *server[] = {"server"};
-    udp_server(1, server);
+    udp_shell_server(1, server);
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);

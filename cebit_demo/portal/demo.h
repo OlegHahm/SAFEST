@@ -71,10 +71,6 @@ void rpl_udp_table(int argc, char **argv);
  */
 void rpl_udp_dodag(int argc, char **argv);
 
-/* UDP shell command handlers */
-void udp_server(int argc, char **argv);
-void udp_send(int argc, char **argv);
-
 /* helper command handlers */
 void rpl_udp_ip(int argc, char **argv);
 
