@@ -20,7 +20,7 @@
  * Set this value to 1 when you want to send the RIOT-TV information
  * via UDP instead of printing it to the std out.
  */
-#define VIZ_REMOTE              0
+// #define VIZ_REMOTE              0
 
 /**
  * List of addresses (as strings) of nodes interested in sensor events
