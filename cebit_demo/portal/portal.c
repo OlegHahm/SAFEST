@@ -23,6 +23,7 @@
 #include <stdio.h>
 
 #include "portal.h"
+#include "events.h"
 #include "demo.h"
 #include "udp.h"
 
@@ -31,18 +32,29 @@
 static uint8_t next_sequ = 1;
 
 
+extern void _reboot_handler(int argc, char **argv);
+void handle_event(char id, char data);
+
+
 void portal_in(int argc, char** argv)
 {
     printf("Route command: %s, params: %i\n", argv[0], argc);
     if (argc == 4) {
         uint16_t dst = (uint16_t)atoi(argv[1]);
-        char sendbuf[3];
-        sendbuf[0] = (char)atoi(argv[2]);       // id
-        sendbuf[1] = (char)atoi(argv[3]);       // data
-        sendbuf[2] = (char)next_sequ++;         // seq
+        uint16_t addr = (uint16_t)atoi(NODE_ADDRESS);
+        char id = (char)atoi(argv[2]);
+        char data = (char)atoi(argv[3]);
 
-        printf("Sending type%i data:%i to %i\n", sendbuf[0], sendbuf[1], dst);
-        udp_send(dst, APPLICATION_PORT, sendbuf, 3);
+        if (dst == addr) {
+            handle_event(id, data);
+        } else {
+            char sendbuf[3];
+            sendbuf[0] = id;
+            sendbuf[1] = data;
+            sendbuf[2] = (char)next_sequ++;         // seq
+            printf("Sending type%i data:%i to %i\n", sendbuf[0], sendbuf[1], dst);
+            udp_send(dst, APPLICATION_PORT, sendbuf, 3);
+        }
     } else {
         puts("FW package has wrong format");
     }
@@ -61,5 +73,15 @@ void portal_out(uint16_t src, char* data, int length)
         printf("fw %i %i %i\n", src, id, payload);
     } else {
         printf("UDP: unidentified data, from %i, length: %i\n", src, length);
+    }
+}
+
+void handle_event(char id, char data)
+{
+    char *reboot[] = {"reboot"};
+    switch(id) {
+        case RESET:
+            _reboot_handler(1, reboot);
+        break;
     }
 }

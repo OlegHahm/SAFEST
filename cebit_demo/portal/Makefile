@@ -53,6 +53,6 @@ endif
 export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x
 
 #include events.h
-export INCLUDES += -I$(CURDIR)/..
+export INCLUDES += -I$(CURDIR)/.. -I$(CURDIR)
 
 include $(RIOTBASE)/Makefile.include

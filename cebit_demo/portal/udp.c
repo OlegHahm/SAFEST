@@ -49,7 +49,6 @@ static void(*server_on_data)(uint16_t src_addr, char* data, int length);
 void init_send_socket(void);
 void server_loop(void);
 void default_data_handler(uint16_t src, char *data, int length);
-void get_ipv6_address(ipv6_addr_t *addr, uint16_t local_addr);
 
 
 
@@ -102,7 +101,7 @@ int udp_send(uint16_t dst_addr, uint16_t port, char *data, int length)
     }
 
     // set receiver address
-    get_ipv6_address(&dst, dst_addr);
+    udp_get_ipv6_address(&dst, dst_addr);
     // write address and port to socket address
     memcpy(&socket_addr.sin6_addr, &dst, sizeof(ipv6_addr_t));
     socket_addr.sin6_port = HTONS(port);
@@ -211,7 +210,7 @@ void init_send_socket(void)
     printf("Successfully opened sending socket\n");
 }
 
-void get_ipv6_address(ipv6_addr_t *addr, uint16_t local_addr)
+void udp_get_ipv6_address(ipv6_addr_t *addr, uint16_t local_addr)
 {
     ipv6_addr_init(addr, 0xabcd, 0x0, 0x0, 0x0, 0x3612, 0x00ff, 0xfe00, local_addr);
 }

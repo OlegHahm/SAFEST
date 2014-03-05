@@ -21,7 +21,6 @@
 
 #include <stdio.h>
 
-#include "net_if.h"
 #include "posix_io.h"
 #include "shell.h"
 #include "shell_commands.h"
@@ -46,9 +45,31 @@ const shell_command_t shell_commands[] = {
     {NULL, NULL, NULL}
 };
 
+
+void fill_nc(void)
+{
+    uint8_t numof = 5;
+    uint16_t neighbors[] = {31, 32, 33, 41, 51};
+    ipv6_addr_t r_addr;
+    uint16_t l_addr;
+
+    for (int i = 0; i < numof; i++) {
+        l_addr = neighbors[i];
+        udp_get_ipv6_address(&r_addr, l_addr);
+        ndp_neighbor_cache_add(0, &r_addr, &l_addr, 2, 0,
+                               NDP_NCE_STATUS_REACHABLE, 
+                               NDP_NCE_TYPE_TENTATIVE, 
+                               0xffff);
+    }
+
+}
+
 int main(void)
 {
     puts("CeBIT demo - portal node v"APP_VERSION);
+
+    // fill neighbor cache
+    fill_nc();
 
     /* set the nodes address */
     char *set[] = {"set", NODE_ADDRESS};
@@ -59,7 +80,7 @@ int main(void)
     rpl_udp_init(2, init);
 
     /* start a UDP server */
-    udp_start_server(APPLICATION_PORT, portal_out);
+    //udp_start_server(APPLICATION_PORT, portal_out);
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);
