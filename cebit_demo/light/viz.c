@@ -21,31 +21,76 @@
 #include <stdio.h>
 
 #include "viz.h"
-#include "config.h"
+#include "demo.h"
 #include "events.h"
 
 
-void viz_udp_pkt(void)
+#ifdef VIZ_REMOTE
+#include "udp.h"
+
+#define VIZ_ADDR        23
+#define VIZ_PORT        APPLICATION_PORT
+#endif
+
+#ifdef VIZ_REMOTE
+static uint8_t next_sequ = 0;
+#endif
+
+extern radio_address_t id;
+
+
+void viz_udp_pkt(uint8_t src)
 {
-// #ifdef VIZ_REMOTE
-
-// #else
-
-// #endif
-    printf("VIZ: UPD pkt\n");
+#ifdef VIZ_REMOTE
+    char evt[3];
+    evt[0] = DTA_RCVD;
+    evt[1] = (uint8_t)src;
+    evt[2] = (char)next_sequ++;
+    udp_send(VIZ_ADDR, VIZ_PORT, evt, 3);
+#else
+    printf("VIZ: UPD packet from %i\n", src);
+    printf("fw %i %i %i\n", id, DTA_RCVD, src);
+#endif
 }
 
 void viz_parent_select(uint8_t parent)
 {
-    printf("VIZ: RPL parent selected: %i\n", parent);
+#ifdef VIZ_REMOTE
+    char evt[3];
+    evt[0] = PARENT_SELECT;
+    evt[1] = parent;
+    evt[2] = (char)next_sequ++;
+    udp_send(VIZ_ADDR, VIZ_PORT, evt, 3);
+#else
+    printf("VIZ: RPL %i selected parent: %i\n", id, parent);
+    printf("fw %i %i %i\n", id, PARENT_SELECT, parent);
+#endif
 }
 
 void viz_parent_deselect(uint8_t parent)
 {
-    printf("VIZ: RPL parent deselect: %i\n", parent);
+#ifdef VIZ_REMOTE
+    char evt[3];
+    evt[0] = PARENT_DELETE;
+    evt[1] = parent;
+    evt[2] = (char)next_sequ++;
+    udp_send(VIZ_ADDR, VIZ_PORT, evt, 3);
+#else
+    printf("VIZ: RPL %i deleted parent: %i\n", id, parent);
+    printf("fw %i %i %i\n", id, PARENT_DELETE, parent);
+#endif
 }
 
 void viz_dio(uint8_t src)
 {
+#ifdef VIZ_REMOTE
+    char evt[3];
+    evt[0] = DIO_RCVD;
+    evt[1] = (uint8_t)src;
+    evt[2] = (char)next_sequ++;
+    udp_send(VIZ_ADDR, VIZ_PORT, evt, 3);
+#else
     printf("VIZ: RPL dio from %i\n", src);
+    printf("fw %i %i %i\n", id, DIO_RCVD, src);
+#endif
 }

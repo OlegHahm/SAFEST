@@ -23,7 +23,7 @@
 
 #include <stdint.h>
 
-void viz_udp_pkt(void);
+void viz_udp_pkt(uint8_t src);
 
 void viz_parent_select(uint8_t parent);
 void viz_parent_deselect(uint8_t parent);
