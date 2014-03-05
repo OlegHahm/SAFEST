@@ -46,6 +46,7 @@ const shell_command_t shell_commands[] = {
     {NULL, NULL, NULL}
 };
 
+
 void fill_nc(void)
 {
     uint8_t numof = 5;
@@ -61,9 +62,7 @@ void fill_nc(void)
                                NDP_NCE_TYPE_TENTATIVE, 
                                0xffff);
     }
-
 }
-
 
 int main(void)
 {
@@ -89,10 +88,8 @@ int main(void)
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);
-
     shell_t shell;
     shell_init(&shell, shell_commands, UART0_BUFSIZE, uart0_readc, uart0_putc);
-
     shell_run(&shell);
     return 0;
 }

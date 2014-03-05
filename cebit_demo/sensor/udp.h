@@ -18,6 +18,8 @@
  * @}
  */
 
+#ifndef __UDP_H
+#define __UDP_H
 
 
 /**
@@ -39,3 +41,11 @@ int udp_send(uint16_t dst_addr, uint16_t port, char *data, int length);
  * @brief Start a UDP server on the designated port
  */
 void udp_start_server(uint16_t port, void(*ondata)(uint16_t src_addr, char *data, int length));
+
+/**
+ * @brief Get a full IPv6 address from local address
+ */
+void udp_get_ipv6_address(ipv6_addr_t *addr, uint16_t local_addr);
+
+
+#endif /* __UDP_H */

@@ -46,9 +46,29 @@ const shell_command_t shell_commands[] = {
 };
 
 
+void fill_nc(void)
+{
+    uint8_t numof = 5;
+    uint16_t neighbors[] = {23, 31, 32, 33, 51};
+    ipv6_addr_t r_addr;
+    uint16_t l_addr;
+
+    for (int i = 0; i < numof; i++) {
+        l_addr = neighbors[i];
+        udp_get_ipv6_address(&r_addr, l_addr);
+        ndp_neighbor_cache_add(0, &r_addr, &l_addr, 2, (l_addr == 23),
+                               NDP_NCE_STATUS_REACHABLE, 
+                               NDP_NCE_TYPE_TENTATIVE, 
+                               0xffff);
+    }
+}
+
 int main(void)
 {
     puts("CeBIT demo - sensor node v"APP_VERSION);
+
+    // fill neighbor cache
+    fill_nc();
 
     /* set the nodes address */
     char *set[] = {"set", NODE_ADDRESS};
