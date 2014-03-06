@@ -27,6 +27,7 @@
 #include "tl_socket.h"
 #include "rpl.h"
 #include "rpl_dodag.h"
+
 #include "demo.h"
 
 #ifdef MODULE_NATIVENET
@@ -59,7 +60,7 @@ void rpl_udp_init(int argc, char **argv)
 
     char command = argv[1][0];
     if ((command == 'n') || (command == 'r')) {
-        printf("INFO: Initialize as %s on address %d\n", ((command == 'n') ? "node" : "root"), id);
+        printf("INFO: Initialize as %s on address %d (0x%X)\n", ((command == 'n') ? "node" : "root"), id, id);
 
         if (!id || (id > 255)) {
             printf("ERROR: address not a valid 8 bit integer\n");

@@ -26,7 +26,7 @@
 
 
 #ifdef VIZ_REMOTE
-#include "udp.h"
+#include "udpif.h"
 
 #define VIZ_ADDR        23
 #define VIZ_PORT        APPLICATION_PORT
@@ -46,7 +46,7 @@ void viz_udp_pkt(uint8_t src)
     evt[0] = DTA_RCVD;
     evt[1] = (uint8_t)src;
     evt[2] = (char)next_sequ++;
-    udp_send(VIZ_ADDR, VIZ_PORT, evt, 3);
+    udpif_send(VIZ_ADDR, VIZ_PORT, evt, 3);
 #else
     printf("VIZ: UPD packet from %i\n", src);
     printf("fw %i %i %i\n", id, DTA_RCVD, src);
@@ -60,7 +60,7 @@ void viz_parent_select(uint8_t parent)
     evt[0] = PARENT_SELECT;
     evt[1] = parent;
     evt[2] = (char)next_sequ++;
-    udp_send(VIZ_ADDR, VIZ_PORT, evt, 3);
+    udpif_send(VIZ_ADDR, VIZ_PORT, evt, 3);
 #else
     printf("VIZ: RPL %i selected parent: %i\n", id, parent);
     printf("fw %i %i %i\n", id, PARENT_SELECT, parent);
@@ -74,7 +74,7 @@ void viz_parent_deselect(uint8_t parent)
     evt[0] = PARENT_DELETE;
     evt[1] = parent;
     evt[2] = (char)next_sequ++;
-    udp_send(VIZ_ADDR, VIZ_PORT, evt, 3);
+    udpif_send(VIZ_ADDR, VIZ_PORT, evt, 3);
 #else
     printf("VIZ: RPL %i deleted parent: %i\n", id, parent);
     printf("fw %i %i %i\n", id, PARENT_DELETE, parent);
@@ -88,7 +88,7 @@ void viz_dio(uint8_t src)
     evt[0] = DIO_RCVD;
     evt[1] = (uint8_t)src;
     evt[2] = (char)next_sequ++;
-    udp_send(VIZ_ADDR, VIZ_PORT, evt, 3);
+    udpif_send(VIZ_ADDR, VIZ_PORT, evt, 3);
 #else
     printf("VIZ: RPL dio from %i\n", src);
     printf("fw %i %i %i\n", id, DIO_RCVD, src);
