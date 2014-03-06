@@ -53,7 +53,7 @@ void fill_nc(void)
     uint16_t l_addr;
 
     for (int i = 0; i < numof; i++) {
-        l_addr = neighbors[i];
+        l_addr = HTONS(neighbors[i]);
         udpif_get_ipv6_address(&r_addr, l_addr);
         ndp_neighbor_cache_add(0, &r_addr, &l_addr, 2, 0,
                                NDP_NCE_STATUS_REACHABLE, 
