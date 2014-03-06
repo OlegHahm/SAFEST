@@ -27,6 +27,7 @@
 
 #include "light.h"
 #include "demo.h"
+#include "events.h"
 
 
 static rgbled_t led;
@@ -91,4 +92,21 @@ void light_off(void)
 {
     rgb_t col = {0, 0, 0};
     rgbled_set(&led, &col);
+}
+
+void light_on_data(uint16_t src, char *data, int length)
+{
+    if (length == 3) {
+        switch(data[1]) {
+            case CONFIRM:
+                light_ok();
+                break;
+            case WARN:
+                light_warn();
+                break;
+            case ALARM:
+                light_alarm();
+                break;
+        }
+    }
 }

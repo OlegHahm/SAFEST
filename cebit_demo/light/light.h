@@ -40,6 +40,8 @@ void light_warn(void);
 
 void light_off(void);
 
+void light_on_data(uint16_t src, char *data, int length);
+
 
 #endif /* __LIGHT_H */
 /** @} */

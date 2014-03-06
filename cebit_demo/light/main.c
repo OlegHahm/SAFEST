@@ -25,7 +25,6 @@
 #include "shell.h"
 #include "shell_commands.h"
 #include "board_uart0.h"
-#include "destiny.h"
 #include "kernel.h"
 
 #include "demo.h"
@@ -66,7 +65,7 @@ void fill_nc(void)
 
 int main(void)
 {
-    puts("CeBIT demo - light node v"APP_VERSION);
+    puts("CeBIT demo - light node v" APP_VERSION);
 
     // fill neighbor cache
     fill_nc();
@@ -80,8 +79,7 @@ int main(void)
     rpl_udp_init(2, init);
 
     /* start the UDP server */
-    char *server[] = {"server"};
-    udp_shell_server(1, server);
+    udp_start_server(APPLICATION_PORT, light_on_data);
 
     /* initialize the light */
     light_init();
