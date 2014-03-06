@@ -23,7 +23,7 @@
 #include "vtimer.h"
 #include "thread.h"
 #include "sixlowpan.h"
-#include "destiny.h"
+#include "tl_socket.h"
 #include "rpl.h"
 #include "rpl_dodag.h"
 #include "demo.h"
