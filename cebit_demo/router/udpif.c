@@ -30,10 +30,10 @@
 #include "tl_socket/socket.h"
 #include "net_help.h"
 
-#include "udp.h"
+#include "udpif.h"
 #include "demo.h"
 
-#define SHELL_PORT          (0xf0f0)
+#define SHELL_PORT          APPLICATION_PORT
 
 #define UDP_BUFFER_SIZE     (128)
 
@@ -53,7 +53,7 @@ void default_data_handler(uint16_t src, char *data, int length);
 
 
 /* UDP server thread */
-void udp_shell_server(int argc, char **argv)
+void udpif_shell_server(int argc, char **argv)
 {
     uint16_t port;
 
@@ -64,11 +64,11 @@ void udp_shell_server(int argc, char **argv)
         port = (uint16_t)atoi(argv[1]);
     }
 
-    udp_start_server(port, default_data_handler);
+    udpif_start_server(port, default_data_handler);
 }
 
 /* send UDP datagram from shell */
-void udp_shell_send(int argc, char **argv)
+void udpif_shell_send(int argc, char **argv)
 {
     uint8_t dst_addr;
     size_t length;
@@ -84,11 +84,11 @@ void udp_shell_send(int argc, char **argv)
     length = strlen(argv[2]);
 
     // send packet
-    udp_send(dst_addr, SHELL_PORT, argv[2], length);
+    udpif_send(dst_addr, SHELL_PORT, argv[2], length);
 }
 
 /* send data via UDP */
-int udp_send(uint16_t dst_addr, uint16_t port, char *data, int length)
+int udpif_send(uint16_t dst_addr, uint16_t port, char *data, int length)
 {
     ipv6_addr_t dst;
     int bytes_send;
@@ -101,7 +101,7 @@ int udp_send(uint16_t dst_addr, uint16_t port, char *data, int length)
     }
 
     // set receiver address
-    udp_get_ipv6_address(&dst, dst_addr);
+    udpif_get_ipv6_address(&dst, dst_addr);
     // write address and port to socket address
     memcpy(&socket_addr.sin6_addr, &dst, sizeof(ipv6_addr_t));
     socket_addr.sin6_port = HTONS(port);
@@ -112,14 +112,13 @@ int udp_send(uint16_t dst_addr, uint16_t port, char *data, int length)
     if (bytes_send < 0) {
         printf("Error: Sending data to %i failed\n", dst_addr);
     } else {
-        printf("Successful delivered %i bytes over UDP to %i, port %i\n", bytes_send, dst_addr, 
-               socket_addr.sin6_port);
+        printf("Successful delivered %i bytes over UDP to %i, port %i\n", bytes_send, dst_addr, port);
     }
     return bytes_send;
 }
 
 /* start a new UDP server on given port */
-void udp_start_server(uint16_t port, void(*ondata)(uint16_t src, char *data, int length))
+void udpif_start_server(uint16_t port, void(*ondata)(uint16_t src, char *data, int length))
 {
     // allow only one server running at the same time - TODO this sucks, enable more then one!
     if (server_socket > 0) {
@@ -148,13 +147,13 @@ void udp_start_server(uint16_t port, void(*ondata)(uint16_t src, char *data, int
     server_on_data = ondata;
 
     // start server thread
-    int udp_server_thread_pid = thread_create(server_stack,
+    int udpif_server_thread_pid = thread_create(server_stack,
                                               KERNEL_CONF_STACKSIZE_MAIN, 
                                               PRIORITY_MAIN, 
                                               CREATE_STACKTEST, 
                                               server_loop, 
                                               "udp_server");
-    printf("UDP server started on port %d (Thread PID: %d)\n", port, udp_server_thread_pid);
+    printf("UDP server started on port %d (Thread PID: %d)\n", port, udpif_server_thread_pid);
 }
 
 
@@ -177,7 +176,7 @@ void server_loop(void)
         if (bytes_received < 0) {      // receive error
             printf("ERROR: UDP server bytes_received < 0!\n");
         } else {                // handle received data
-            src_local_addr = src_addr.sin6_addr.uint16[7];
+            src_local_addr = src_addr.sin6_addr.uint8[15];
             server_on_data(src_local_addr, receive_buffer, bytes_received);
             printf("UDP: received %i bytes from %i\n", bytes_received, src_local_addr);
         }
@@ -211,8 +210,7 @@ void init_send_socket(void)
     printf("Successfully opened sending socket\n");
 }
 
-void udp_get_ipv6_address(ipv6_addr_t *addr, uint16_t local_addr)
+void udpif_get_ipv6_address(ipv6_addr_t *addr, uint16_t local_addr)
 {
-    ipv6_addr_init(addr, 0xabcd, 0x0, 0x0, 0x0, 0x3612, 0x00ff, 0xfe00, local_addr);
+    ipv6_addr_init(addr, 0xfe80, 0x0, 0x0, 0x0, 0x0, 0x00ff, 0xfe00, local_addr);
 }
-
