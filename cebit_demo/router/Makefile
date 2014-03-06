@@ -40,7 +40,7 @@ USEMODULE += ps
 USEMODULE += vtimer
 USEMODULE += sixlowpan
 USEMODULE += rpl
-USEMODULE += destiny
+USEMODULE += udp
 ifeq ($(strip $(BOARD)),native)
 	USEMODULE += nativenet
 else ifeq ($(strip $(BOARD)),msba2)

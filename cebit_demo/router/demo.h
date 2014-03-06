@@ -3,7 +3,7 @@
 
 #include "kernel.h"
 #include "radio/types.h"
-#include "destiny/socket.h"
+#include "tl_socket/socket.h"
 
 #define APP_VERSION "0.5"
 
