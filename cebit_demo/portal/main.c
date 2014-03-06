@@ -28,7 +28,7 @@
 #include "kernel.h"
 
 #include "demo.h"
-#include "udp.h"
+#include "udpif.h"
 #include "portal.h"
 
 const shell_command_t shell_commands[] = {
@@ -37,8 +37,8 @@ const shell_command_t shell_commands[] = {
     {"table", "Shows the routing table", rpl_udp_table},
     {"dodag", "Shows the dodag", rpl_udp_dodag},
     {"loop", "", rpl_udp_loop},
-    {"server", "Starts a UDP server", udp_shell_server},
-    {"send", "Send a UDP datagram", udp_shell_send},
+    {"server", "Starts a UDP server", udpif_shell_server},
+    {"send", "Send a UDP datagram", udpif_shell_send},
     {"ign", "ignore node", rpl_udp_ignore},
     {"fw", "fw an event into the net", portal_in},
     {NULL, NULL, NULL}
@@ -54,7 +54,7 @@ void fill_nc(void)
 
     for (int i = 0; i < numof; i++) {
         l_addr = neighbors[i];
-        udp_get_ipv6_address(&r_addr, l_addr);
+        udpif_get_ipv6_address(&r_addr, l_addr);
         ndp_neighbor_cache_add(0, &r_addr, &l_addr, 2, 0,
                                NDP_NCE_STATUS_REACHABLE, 
                                NDP_NCE_TYPE_TENTATIVE, 
@@ -79,7 +79,7 @@ int main(void)
     rpl_udp_init(2, init);
 
     /* start a UDP server */
-    //udp_start_server(APPLICATION_PORT, portal_out);
+    udpif_start_server(APPLICATION_PORT, portal_out);
 
     /* start shell */
     posix_open(uart0_handler_pid, 0);

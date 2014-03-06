@@ -14,7 +14,7 @@
 #define NODE_MODE               "r"     // normal node
 #define RADIO_CHANNEL           (10)
 #define GW_ADDRESS              "23"
-#define APPLICATION_PORT        0xff01
+#define APPLICATION_PORT        (2350U)
 
 /**
  * Set this value to 1 when you want to send the RIOT-TV information

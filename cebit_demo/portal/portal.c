@@ -25,7 +25,7 @@
 #include "portal.h"
 #include "events.h"
 #include "demo.h"
-#include "udp.h"
+#include "udpif.h"
 
 //static uint8_t sequ_list[5][10];
 
@@ -53,7 +53,7 @@ void portal_in(int argc, char** argv)
             sendbuf[1] = data;
             sendbuf[2] = (char)next_sequ++;         // seq
             printf("Sending type%i data:%i to %i\n", sendbuf[0], sendbuf[1], dst);
-            udp_send(dst, APPLICATION_PORT, sendbuf, 3);
+            udpif_send(dst, APPLICATION_PORT, sendbuf, 3);
         }
     } else {
         puts("FW package has wrong format");
