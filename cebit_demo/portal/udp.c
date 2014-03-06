@@ -27,7 +27,7 @@
 
 #include "kernel.h"
 #include "thread.h"
-#include "destiny/socket.h"
+#include "tl_socket/socket.h"
 #include "net_help.h"
 
 #include "udp.h"
@@ -107,7 +107,7 @@ int udp_send(uint16_t dst_addr, uint16_t port, char *data, int length)
     socket_addr.sin6_port = HTONS(port);
 
     // send data
-    bytes_send = destiny_socket_sendto(socket, data, length, 0, &socket_addr, sizeof(sockaddr6_t));
+    bytes_send = tl_socket_sendto(socket, data, length, 0, &socket_addr, sizeof(sockaddr6_t));
 
     if (bytes_send < 0) {
         printf("Error: Sending data to %i failed, bytes_send < 0\n", dst_addr);
@@ -127,7 +127,7 @@ void udp_start_server(uint16_t port, void(*ondata)(uint16_t src, char *data, int
     }
 
     // open server socket
-    server_socket = destiny_socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
+    server_socket = tl_socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
     if (server_socket < 0) {
         printf("Error: Unable to open UDP server socket\n");
     }
@@ -138,9 +138,9 @@ void udp_start_server(uint16_t port, void(*ondata)(uint16_t src, char *data, int
     server_addr.sin6_port = HTONS(port);
 
     // bind server socket
-    if (-1 == destiny_socket_bind(server_socket, &server_addr, sizeof(server_addr))) {
+    if (-1 == tl_socket_bind(server_socket, &server_addr, sizeof(server_addr))) {
         printf("Error: Binding the server socket failed!\n");
-        destiny_socket_close(server_socket);
+        tl_socket_close(server_socket);
     }
 
     // set on data callback
@@ -167,7 +167,7 @@ void server_loop(void)
 
     // listen for data
     while (1) {
-        bytes_received = destiny_socket_recvfrom(server_socket,
+        bytes_received = tl_socket_recvfrom(server_socket,
                                                 (void *)receive_buffer, 
                                                 UDP_BUFFER_SIZE, 
                                                 0,
@@ -196,7 +196,7 @@ void default_data_handler(uint16_t src, char *data, int length)
 void init_send_socket(void)
 {
     // open a new UDP socket
-    socket = destiny_socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
+    socket = tl_socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
 
     if (socket == -1) {
         puts("Error creating sending socket!");
