@@ -1,0 +1,52 @@
+Packing List for CeBIT 2014
+===========================
+
+
+Hardware
+---------------------------
+1x      avsextrem           (1x Hauke)
+7x      msba2               (2x Hauke, 
+                             2x Christian, 
+                             2x Oleg)
+1x      chronos (watch)     (Oleg)
+        incl. flash-adapter
+1x      stm32f4-discovery   (Hauke)
+1x      Raspberry Pi        (Hauke)
+        (incl. 4GB SD-card)
+1x      Laptop (Dell...)    (Matthias)
+1x      IPad + charger      (Matthias)
+1x      LED-stripe          (Hauke)
+1x      LED-driver          (Hauke)
+        incl. power adapter
+2x      cases (black)       (Hauke)
+1x      case (grey)         (Hauke)
+
+
+
+Utilities
+---------------------------
+1x      micro-USB cable     (Hauke)
+5x      mini-USB cable      (Oleg)
+2x      USB-extension cable (Oleg)
+2x      USB-hub             (Oleg)
+12x     AAA-accu            (Hauke)
+5x      CR2032 batteries    (Hauke)
+        (for watch)
+
+
+
+
+Tools
+---------------------------
+2x      battery charger     (Hauke)
+2x      screwdriver         (Oleg)
+1x      scissors            (Hauke)
+2x      roll of tape        (Hauke)
+
+
+
+Others
+---------------------------
+
+
+
