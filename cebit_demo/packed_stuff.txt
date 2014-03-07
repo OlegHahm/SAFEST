@@ -4,44 +4,56 @@ Packing List for CeBIT 2014
 
 Hardware
 ---------------------------
-1x      avsextrem           (1x Hauke)
-7x      msba2               (2x Hauke, 
-                             2x Christian, 
-                             2x Oleg)
-1x      chronos (watch)     (Oleg)
-        incl. flash-adapter
-1x      stm32f4-discovery   (Hauke)
-1x      Raspberry Pi        (Hauke)
-        (incl. 4GB SD-card)
-1x      Laptop (Dell...)    (Matthias)
-1x      IPad + charger      (Matthias)
+1x      avsextrem           (1x Hauke)                     X
+7x      msba2               (2x Hauke,                     X
+                             2x Christian,                 X
+                             3x Oleg)                      X
+1x      chronos (watch)     (Oleg)                         X
+        incl. flash-adapter                                X
+1x      stm32f4-discovery   (Hauke)                        X
+1x      scatterweb          (Oleg)                         X
+1x      msp430              (Oleg)                         X
+1x      mbed                (Oleg)                         X
+1x      vive                (Oleg)                         X
+1x      Raspberry Pi+Netzteil (Hauke)                      X
+        (incl. 4GB SD-card)                                X
+1x      Laptop (Dell RIOT)    (Matthias)                   X
+1x      IPad + charger      (Matthias)                     X
 1x      LED-stripe          (Hauke)
 1x      LED-driver          (Hauke)
         incl. power adapter
 2x      cases (black)       (Hauke)
 1x      case (grey)         (Hauke)
-
+2x      Kinnect             (Matthias)                     X
+1x      Karton Davico       (Matthias)                     X
+1x      Stativ (im Davico Karton)                          X
+1x      Laptop für Kamera mit Netzteil                     X
+1x      10m aktives USB Kabel                              X 
+1x      Linksys Router      (Matthias)                     X
 
 
 Utilities
 ---------------------------
-1x      micro-USB cable     (Hauke)
-5x      mini-USB cable      (Oleg)
-2x      USB-extension cable (Oleg)
-2x      USB-hub             (Oleg)
-12x     AAA-accu            (Hauke)
+6x      mini-USB cable      (Oleg)                         X
+5x      USB-extension cable (Oleg)                         X
+3x      USB-hub inkl. Netzteil            (Oleg)           X
+12x     AAA-accu            (Hauke)                        X
 5x      CR2032 batteries    (Hauke)
         (for watch)
-
-
+6x      Lan Kabel                                          X
+1x      Doppelseitiges Klebeband                           X
+5x      3er steckdose                                      X
+2x      3m verlängerungskabel                              X
+1x      Kensigton Lock                                     X
+1x      5m verlängerungskabel (stephan)                    X
 
 
 Tools
 ---------------------------
-2x      battery charger     (Hauke)
-2x      screwdriver         (Oleg)
-1x      scissors            (Hauke)
-2x      roll of tape        (Hauke)
+2x      battery charger     (Hauke)                        X
+2x      screwdriver         (Oleg)                         X
+1x      scissors            (Hauke)                        X
+2x      roll of tape        (Hauke)                        X
 
 
 
