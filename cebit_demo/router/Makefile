@@ -5,7 +5,7 @@ export PROJECT = cebit_router
 export BOARD ?= msba2
 
 # This has to be the absolute path to the RIOT base directory:
-export RIOTBASE ?= $(CURDIR)/../../../riot/RIOT
+export RIOTBASE ?= $(CURDIR)/../../../RIOT
 
 # Uncomment these lines if you want to use platform support from external
 # repositories:
@@ -29,6 +29,7 @@ export QUIET ?= 1
 
 # get rid of the mandatory RPL warning
 CFLAGS += "-Wno-cpp"
+CFLAGS += "-DDBG_IGNORE"
 
 # Modules to include:
 
@@ -55,3 +56,21 @@ export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/r
 export INCLUDES += -I$(CURDIR)/.. -I$(CURDIR)
 
 include $(RIOTBASE)/Makefile.include
+
+FORCE:
+	touch main.c
+
+node31: CFLAGS += "-DNODE_ADDRESS=31"
+node31: FORCE all 
+
+node32: CFLAGS += "-DNODE_ADDRESS=32"
+node32: FORCE all 
+
+node33: CFLAGS += "-DNODE_ADDRESS=33"
+node33: FORCE all 
+
+node41: CFLAGS += "-DNODE_ADDRESS=41"
+node41: FORCE all 
+
+node51: CFLAGS += "-DNODE_ADDRESS=51"
+node51: FORCE all 
