@@ -10,7 +10,17 @@
 /**
  * Basic network configuration (addresses, channel, etc)
  */
-#define NODE_ADDRESS            "31"
+#ifndef NODE_ADDRESS
+#define NODE_ADDRESS            31
+#endif
+#if NODE_ADDRESS == 31
+#define LEVEL1
+#elif (NODE_ADDRESS == 32) | (NODE_ADDRESS == 33)
+#define LEVEL2
+#elif (NODE_ADDRESS == 41) | (NODE_ADDRESS == 51)
+#define LEVEL3
+#endif
+
 #define NODE_MODE               "n"
 #define RADIO_CHANNEL           (10)
 #define GW_ADDRESS              "23"
@@ -74,7 +84,8 @@ void rpl_udp_dodag(int argc, char **argv);
 /* helper command handlers */
 void rpl_udp_ip(int argc, char **argv);
 
-void rpl_udp_ignore(int argc, char **argv);
+void rpl_udp_ignore(uint16_t addr);
+void rpl_udp_ignore_cmd(int argc, char **argv);
 
 /* monitoring thread */
 void rpl_udp_monitor(void);
