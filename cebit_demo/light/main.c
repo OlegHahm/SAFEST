@@ -39,9 +39,12 @@ const shell_command_t shell_commands[] = {
     {"loop", "", rpl_udp_loop},
     {"server", "Starts a UDP server", udpif_shell_server},
     {"send", "Send a UDP datagram", udpif_shell_send},
-    {"ign", "ignore node", rpl_udp_ignore},
+    {"ign", "ignore node", rpl_udp_ignore_cmd},
     {"color", "Set a color [r] [g] [b]", light_set_shell},
     {"light-off", "Turn off the light", light_off_shell},
+    {"confirm", "Confirm event", light_ok_shell},
+    {"warn", "Warn event", light_warn_shell},
+    {"alarm", "Alarm event", light_alarm_shell},
     {NULL, NULL, NULL}
 };
 

@@ -30,6 +30,12 @@ void light_set_shell(int argc, char **argv);
 
 void light_off_shell(int argc, char **argv);
 
+void light_ok_shell(int argc, char **);
+
+void light_warn_shell(int argc, char **);
+
+void light_alarm_shell(int argc, char **);
+
 void light_set_rgb(uint8_t r, uint8_t g, uint8_t b);
 
 void light_alarm(void);

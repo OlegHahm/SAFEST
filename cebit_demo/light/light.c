@@ -38,11 +38,6 @@ void light_init(void)
     rgbled_init(&led, PWM_0, LIGHT_CH_R, LIGHT_CH_G, LIGHT_CH_B);
 }
 
-void light_recv_cmd(int src, char id, char data, char sequ)
-{
-    printf("Got new command from %i: id(%i), data(%i), seq(%i)\n", src, id, data, sequ);
-}
-
 void light_set_shell(int argc, char **argv)
 {
     rgb_t col;
@@ -62,15 +57,42 @@ void light_off_shell(int argc, char **argv)
     light_off();
 }
 
+void light_ok_shell(int argc, char **argv)
+{
+    (void)argc;
+    (void)argv;
+    char data[3];
+    data[0] = CONFIRM;
+    data[1] = 12;
+    data[2] = 33;
+    light_on_data(99, data, 3);
+}
+
+void light_warn_shell(int argc, char **argv)
+{
+    (void)argc;
+    (void)argv;
+    char data[3];
+    data[0] = WARN;
+    data[1] = 12;
+    data[2] = 33;
+    light_on_data(99, data, 3);
+}
+
+void light_alarm_shell(int argc, char **argv)
+{
+    (void)argc;
+    (void)argv;
+    char data[3];
+    data[0] = ALARM;
+    data[1] = 12;
+    data[2] = 33;
+    light_on_data(99, data, 3);
+}
+
 void light_set_rgb(uint8_t r, uint8_t g, uint8_t b)
 {
     rgb_t col = {r, g, b};
-    rgbled_set(&led, &col);
-}
-
-void light_alarm(void)
-{
-    rgb_t col = LIGHT_COLOR_ALARM;
     rgbled_set(&led, &col);
 }
 
@@ -88,6 +110,12 @@ void light_warn(void)
 
 }
 
+void light_alarm(void)
+{
+    rgb_t col = LIGHT_COLOR_ALARM;
+    rgbled_set(&led, &col);
+}
+
 void light_off(void)
 {
     rgb_t col = {0, 0, 0};
@@ -97,7 +125,7 @@ void light_off(void)
 void light_on_data(uint16_t src, char *data, int length)
 {
     if (length == 3) {
-        switch(data[1]) {
+        switch(data[0]) {
             case CONFIRM:
                 light_ok();
                 break;

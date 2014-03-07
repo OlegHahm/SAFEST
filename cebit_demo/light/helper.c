@@ -115,15 +115,8 @@ void rpl_udp_monitor(void)
 
 transceiver_command_t tcmd;
 
-void rpl_udp_ignore(int argc, char **argv)
+void rpl_udp_ignore(uint16_t a)
 {
-    uint16_t a;
-
-    if (transceiver_pid < 0) {
-        puts("Transceiver not runnning.");
-        return;
-    }
-
     msg_t mesg;
     mesg.type = DBG_IGN;
     mesg.content.ptr = (char *) &tcmd;
@@ -131,10 +124,22 @@ void rpl_udp_ignore(int argc, char **argv)
     tcmd.transceivers = TRANSCEIVER_CC1100;
     tcmd.data = &a;
 
+    msg_send(&mesg, transceiver_pid, 1);
+}
+
+void rpl_udp_ignore_cmd(int argc, char **argv)
+{
+    uint16_t a;
+
+    if (transceiver_pid < 0) {
+        puts("Transceiver not runnning.");
+        return;
+    }
+    
     if (argc == 2) {
         a = atoi(argv[1]);
         printf("sending to transceiver (%u): %u\n", transceiver_pid, (*(uint8_t *)tcmd.data));
-        msg_send(&mesg, transceiver_pid, 1);
+        rpl_udp_ignore(a);
     }
     else {
         printf("Usage: %s <addr>\n", argv[0]);

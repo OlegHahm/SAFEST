@@ -42,9 +42,9 @@
 /**
  * Light node specific configuration options
  */
-#define LIGHT_COLOR_OK          {0, 255, 0}
-#define LIGHT_COLOR_WARN        {255, 255, 0}
-#define LIGHT_COLOR_ALARM       {255, 0, 0}
+#define LIGHT_COLOR_OK          {0, 125, 0}
+#define LIGHT_COLOR_WARN        {90, 0, 30}
+#define LIGHT_COLOR_ALARM       {125, 0, 0}
 
 #define LIGHT_CH_R              1
 #define LIGHT_CH_G              2
@@ -85,7 +85,8 @@ void rpl_udp_dodag(int argc, char **argv);
 /* helper command handlers */
 void rpl_udp_ip(int argc, char **argv);
 
-void rpl_udp_ignore(int argc, char **argv);
+void rpl_udp_ignore(uint16_t addr);
+void rpl_udp_ignore_cmd(int argc, char **argv);
 
 /* monitoring thread */
 void rpl_udp_monitor(void);
