@@ -48,18 +48,24 @@ const shell_command_t shell_commands[] = {
 
 void fill_nc(void)
 {
-    uint8_t numof = 5;
-    uint16_t neighbors[] = {23, 31, 32, 33, 41};
+    uint8_t numne = 2;
+    uint8_t numig = 4;
+    uint16_t neighbors[] = {23, 31};
+    uint16_t ignore[] = {32, 33, 41, 51};
     ipv6_addr_t r_addr;
     uint16_t l_addr;
 
-    for (int i = 0; i < numof; i++) {
-        l_addr = neighbors[i];
+    for (int i = 0; i < numne; i++) {
+        l_addr = HTONS(neighbors[i]);
         udpif_get_ipv6_address(&r_addr, l_addr);
-        ndp_neighbor_cache_add(0, &r_addr, &l_addr, 2, (l_addr == 23),
+        ndp_neighbor_cache_add(0, &r_addr, &l_addr, 2, 0,
                                NDP_NCE_STATUS_REACHABLE, 
                                NDP_NCE_TYPE_TENTATIVE, 
                                0xffff);
+    }
+    for (int i = 0; i < numig; i++) {
+        printf("Ignoring %u\n", ignore[i]);
+        rpl_udp_ignore(ignore[i]);
     }
 }
 
