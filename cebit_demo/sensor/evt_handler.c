@@ -39,7 +39,7 @@ void evt_handler_ok(void)
     LED_GREEN_ON;
     LED_RED_OFF;
     // send status ok to actuator nodes
-    send_event(DISARMED);
+    send_event(CONFIRM);
 }
 
 void evt_handler_warn(void)
@@ -63,12 +63,16 @@ void evt_handler_alarm(void)
 void send_event(evt_t event)
 {
     char cmd[3];
+    if (event != CONFIRM) {         // if CONFIRM reuse old evt_no
+        ++evt_no;
+    }
     cmd[0] = (char)event;      // id
-    cmd[1] = (char)evt_no++;   // data
+    cmd[1] = (char)evt_no;   // data
     cmd[2] = (char)sequ_no++;  // sequence number
     for (int retrans = 0; retrans < RETRANSMISSIONS; retrans++) {
         for (int i = 0; i < OBSERVER_NUMOF; i++) {
             udpif_send(observers[i], APPLICATION_PORT, cmd, 3);
+            printf("UDP: send id:%i, data:%i, sequ:%i\n", cmd[0], cmd[1], cmd[2]);
         }
     }
 }
