@@ -26,6 +26,7 @@
 #include "udpif.h"
 
 static uint8_t sequ_no = 0;
+static uint8_t evt_no = 0;
 static uint16_t observers[] = OBSERVER_NODES;
 
 void send_event(evt_t event);
@@ -63,7 +64,7 @@ void send_event(evt_t event)
 {
     char cmd[3];
     cmd[0] = (char)event;      // id
-    cmd[1] = '\0';             // data
+    cmd[1] = (char)evt_no++;   // data
     cmd[2] = (char)sequ_no++;  // sequence number
     for (int retrans = 0; retrans < RETRANSMISSIONS; retrans++) {
         for (int i = 0; i < OBSERVER_NUMOF; i++) {
