@@ -74,7 +74,8 @@ void rpl_udp_dodag(int argc, char **argv);
 /* helper command handlers */
 void rpl_udp_ip(int argc, char **argv);
 
-void rpl_udp_ignore(int argc, char **argv);
+void rpl_udp_ignore(uint16_t addr);
+void rpl_udp_ignore_cmd(int argc, char **argv);
 
 /* monitoring thread */
 void rpl_udp_monitor(void);
