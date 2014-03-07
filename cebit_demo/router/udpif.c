@@ -32,6 +32,7 @@
 
 #include "udpif.h"
 #include "demo.h"
+#include "viz.h"
 
 #define SHELL_PORT          APPLICATION_PORT
 
@@ -191,6 +192,8 @@ void default_data_handler(uint16_t src, char *data, int length)
         printf("%X ", data[i]);
     }
     printf("\n");
+
+    viz_udp_pkt(src);
 }
 
 void init_send_socket(void)
