@@ -37,7 +37,7 @@
 #endif
 
 char monitor_stack_buffer[MONITOR_STACK_SIZE];
-radio_address_t id;
+radio_address_t id = NODE_ADDRESS;
 ipv6_addr_t std_addr;
 char addr_str[IPV6_MAX_ADDR_STR_LEN];
 
