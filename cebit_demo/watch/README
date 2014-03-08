@@ -1,0 +1,41 @@
+Flash The Firmware:
+
+ 1. Connect the watch via USB programmer. Be careful not to bend the
+    contacts too hard and that all the pins are plugged in. It is
+    possible to misalign it ...
+
+ 2. Run:
+        mspdebug rf2500
+    In the tool execute:
+        prog <filename>
+    Use "Recovery_ez430_chronos_868MHz_2_1.txt" as filename to flash
+    the stock firmware from TI.
+
+ 3. Flashing takes a while, relax.
+
+ 4. When flashing has finished, exit the mspdebug (e.g. ctrl+d or
+    "exit")
+ 
+Communicate With The Watch:
+
+    Host:
+
+     1. Make sure the accesspoint is plugged in.
+
+     2. It may help to remove the USB programmer.
+
+     3. Run:
+        ./chronosbutton.py
+
+    Watch:
+
+     1. Use the "#" button to navigate to "ppt"
+
+     2. Use the "v" button to start the radio and connect to the
+        accesspoint. The ")))" symbol should start blinking.
+
+     3. Use the buttons "#", "*", and "^" to send events to the
+        host.
+
+    4. Press the "v" button again to deactivate the radio and save
+       energy.
