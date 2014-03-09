@@ -5,7 +5,7 @@ export PROJECT = cebit_portal
 export BOARD ?= msba2
 
 # This has to be the absolute path to the RIOT base directory:
-export RIOTBASE ?= $(CURDIR)/../../../riot/RIOT
+export RIOTBASE ?= $(CURDIR)/../../../RIOT
 
 # Uncomment these lines if you want to use platform support from external
 # repositories:
@@ -24,11 +24,12 @@ export RIOTBASE ?= $(CURDIR)/../../../riot/RIOT
 # development process:
 #CFLAGS += -DDEVELHELP
 
+CFLAGS += -Wno-cpp
+
 # Change this to 0 show compiler invocation lines by default:
 export QUIET ?= 1
 
 # get rid of the mandatory RPL warning
-CFLAGS += "-Wno-cpp"
 
 # Modules to include:
 
@@ -42,12 +43,13 @@ USEMODULE += vtimer
 USEMODULE += sixlowpan
 USEMODULE += rpl
 USEMODULE += udp
+USEMODULE += transceiver
 ifeq ($(strip $(BOARD)),native)
 	USEMODULE += nativenet
 else ifeq ($(strip $(BOARD)),msba2)
 	USEMODULE += cc110x_ng
 else ifeq ($(strip $(BOARD)),avsextrem)
-	USEMODULE += cc110x_ng
+	USEMODULE += cc110x
 endif
 
 export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x

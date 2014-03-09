@@ -42,12 +42,13 @@ USEMODULE += vtimer
 USEMODULE += sixlowpan
 USEMODULE += rpl
 USEMODULE += udp
+USEMODULE += transceiver
 ifeq ($(strip $(BOARD)),native)
 	USEMODULE += nativenet
 else ifeq ($(strip $(BOARD)),msba2)
 	USEMODULE += cc110x_ng
 else ifeq ($(strip $(BOARD)),avsextrem)
-	USEMODULE += cc110x_ng
+	USEMODULE += cc110x
 endif
 
 export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x
@@ -73,4 +74,4 @@ node41: CFLAGS += "-DNODE_ADDRESS=41"
 node41: FORCE all 
 
 node51: CFLAGS += "-DNODE_ADDRESS=51"
-node51: FORCE all 
+node51: FORCE all
