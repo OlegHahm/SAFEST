@@ -29,6 +29,7 @@ export QUIET ?= 1
 
 # get rid of the mandatory RPL warning
 CFLAGS += "-Wno-cpp"
+CFLAGS += "-DDBG_IGNORE"
 
 # Modules to include:
 
@@ -41,13 +42,14 @@ USEMODULE += vtimer
 USEMODULE += sixlowpan
 USEMODULE += rpl
 USEMODULE += udp
+USEMODULE += transceiver
 USEMODULE += rgbled
 ifeq ($(strip $(BOARD)),native)
 	USEMODULE += nativenet
 else ifeq ($(strip $(BOARD)),msba2)
 	USEMODULE += cc110x_ng
 else ifeq ($(strip $(BOARD)),avsextrem)
-	USEMODULE += cc110x_ng
+	USEMODULE += cc110x
 endif
 
 export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x

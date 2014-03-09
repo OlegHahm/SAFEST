@@ -10,7 +10,8 @@
 /**
  * Basic network configuration (addresses, channel, etc)
  */
-#define NODE_ADDRESS            "51"
+#define NODE_ADDRESS            51
+#define LEVEL3
 #define NODE_MODE               "n"
 #define RADIO_CHANNEL           (10)
 #define GW_ADDRESS              "23"

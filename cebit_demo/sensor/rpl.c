@@ -22,7 +22,7 @@
 #include <string.h>
 #include "vtimer.h"
 #include "thread.h"
-#include "tl_socket.h"
+#include "net_if.h"
 #include "sixlowpan.h"
 #include "tl_socket.h"
 #include "rpl.h"
@@ -37,7 +37,7 @@
 #endif
 
 char monitor_stack_buffer[MONITOR_STACK_SIZE];
-radio_address_t id;
+radio_address_t id = NODE_ADDRESS;
 ipv6_addr_t std_addr;
 char addr_str[IPV6_MAX_ADDR_STR_LEN];
 

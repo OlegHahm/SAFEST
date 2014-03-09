@@ -169,11 +169,11 @@ void server_loop(void)
     // listen for data
     while (1) {
         bytes_received = tl_socket_recvfrom(server_socket,
-                                                (void *)receive_buffer, 
-                                                UDP_BUFFER_SIZE, 
-                                                0,
-                                                &src_addr, 
-                                                &fromlen);
+                                            (void *)receive_buffer, 
+                                            UDP_BUFFER_SIZE, 
+                                            0,
+                                            &src_addr, 
+                                            &fromlen);
         if (bytes_received < 0) {      // receive error
             printf("ERROR: UDP server bytes_received < 0!\n");
         } else {                // handle received data
