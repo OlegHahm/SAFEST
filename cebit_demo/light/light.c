@@ -100,6 +100,7 @@ void light_ok(void)
 {
     rgb_t col = LIGHT_COLOR_OK;
     rgbled_set(&led, &col);
+    printf("LIGHT: confirm\n");
 
 }
 
@@ -107,13 +108,14 @@ void light_warn(void)
 {
     rgb_t col = LIGHT_COLOR_WARN;
     rgbled_set(&led, &col);
-
+    printf("LIGHT: warning\n");
 }
 
 void light_alarm(void)
 {
     rgb_t col = LIGHT_COLOR_ALARM;
     rgbled_set(&led, &col);
+    printf("LIGHT: alarm\n");
 }
 
 void light_off(void)

@@ -28,6 +28,7 @@
 #include "rpl_structs.h"
 
 #include "demo.h"
+#include "viz.h"
 
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
@@ -62,6 +63,7 @@ void rpl_udp_monitor(void)
     ipv6_hdr_t *ipv6_buf;
     uint8_t icmp_type, icmp_code;
     icmpv6_hdr_t *icmpv6_buf = NULL;
+    uint8_t ll_src;
 
     msg_init_queue(msg_q, RCV_BUFFER_SIZE);
 
@@ -70,6 +72,7 @@ void rpl_udp_monitor(void)
 
         if (m.type == PKT_PENDING) {
             p = (radio_packet_t *) m.content.ptr;
+            ll_src = p->src;
 
             DEBUG("Received packet from ID %u\n", p->src);
             DEBUG("\tLength:\t%u\n", p->length);
@@ -90,6 +93,9 @@ void rpl_udp_monitor(void)
             printf("IPv6 datagram received (next header: %02X)", ipv6_buf->nextheader);
             printf(" from %s ", ipv6_addr_to_str(addr_str, IPV6_MAX_ADDR_STR_LEN, &ipv6_buf->srcaddr));
 
+            if (ipv6_buf->nextheader == IPV6_PROTO_NUM_UDP) {
+                viz_udp_pkt(ll_src);
+            }
 
             if (ipv6_buf->nextheader == IPV6_PROTO_NUM_ICMPV6) {
                 icmpv6_buf = (icmpv6_hdr_t *) &ipv6_buf[(LL_HDR_LEN + IPV6_HDR_LEN) + ipv6_ext_hdr_len];
