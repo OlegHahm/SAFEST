@@ -63,7 +63,7 @@ void viz_parent_select(uint8_t parent)
     udpif_send(VIZ_ADDR, VIZ_PORT, evt, 3);
 #else
     printf("VIZ: RPL %i selected parent: %i\n", id, parent);
-    printf("fw %i %i %i\n", id, PARENT_SELECT, parent);
+    // printf("fw %i %i %i\n", id, PARENT_SELECT, parent);
 #endif
 }
 
@@ -77,7 +77,7 @@ void viz_parent_deselect(uint8_t parent)
     udpif_send(VIZ_ADDR, VIZ_PORT, evt, 3);
 #else
     printf("VIZ: RPL %i deleted parent: %i\n", id, parent);
-    printf("fw %i %i %i\n", id, PARENT_DELETE, parent);
+    // printf("fw %i %i %i\n", id, PARENT_DELETE, parent);
 #endif
 }
 

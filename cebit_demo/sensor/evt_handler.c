@@ -19,6 +19,7 @@
  */
 
 #include <stdio.h>
+#include "vtimer.h"
 
 #include "evt_handler.h"
 #include "demo.h"
@@ -73,6 +74,7 @@ void send_event(evt_t event)
         for (int i = 0; i < OBSERVER_NUMOF; i++) {
             udpif_send(observers[i], APPLICATION_PORT, cmd, 3);
             printf("UDP: send id:%i, data:%i, sequ:%i\n", cmd[0], cmd[1], cmd[2]);
+            vtimer_usleep(1000);
         }
     }
 }

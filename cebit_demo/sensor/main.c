@@ -47,27 +47,33 @@ const shell_command_t shell_commands[] = {
 
 void fill_nc(void)
 {
-#ifdef ALL_NEIGHBORS
-    int numne = 5;
-    int numig = 0;
-    uint16_t neighbors[] = {23, 31, 32, 33, 41, 51};
-    uint16_t ignore[] = {};
-#elif defined LEVEL1
-    int numne = 4;
-    int numig = 2;
-    uint16_t neighbors[] = {23, 31, 32, 33};
-    uint16_t ignore[] = {41, 51};
-#elif defined LEVEL2
-    int numne = 5;
-    int numig = 1;
-    uint16_t neighbors[] = {31, 32, 33, 41, 51};
-    uint16_t ignore[] = {23};
-#elif defined LEVEL3
-    int numne = 4;
-    int numig = 2;
-    uint16_t neighbors[] = {32, 33, 41, 51};
-    uint16_t ignore[] = {23, 31};
-#endif
+// #ifdef ALL_NEIGHBORS
+//     int numne = 5;
+//     int numig = 0;
+//     uint16_t neighbors[] = {23, 31, 32, 33, 41, 51};
+//     uint16_t ignore[] = {};
+// #elif defined LEVEL1
+//     int numne = 4;
+//     int numig = 2;
+//     uint16_t neighbors[] = {23, 31, 32, 33};
+//     uint16_t ignore[] = {41, 51};
+// #elif defined LEVEL2
+//     int numne = 5;
+//     int numig = 1;
+//     uint16_t neighbors[] = {31, 32, 33, 41, 51};
+//     uint16_t ignore[] = {23};
+// #elif defined LEVEL3
+//     int numne = 3;
+//     int numig = 3;
+//     uint16_t neighbors[] = {32, 33, 41};
+//     uint16_t ignore[] = {23, 31, 51};
+// #endif
+
+    int numne = 2;
+    int numig = 4;
+    uint16_t neighbors[] = {33, 41};
+    uint16_t ignore[] = {23, 31, 32, 51};
+
     ipv6_addr_t r_addr;
     uint16_t l_addr;
 

@@ -21,13 +21,13 @@
  * Set this value to 1 when you want to send the RIOT-TV information
  * via UDP instead of printing it to the std out.
  */
-// #define VIZ_REMOTE              1
+#define VIZ_REMOTE              1
 
 /**
  * List of addresses (as strings) of nodes interested in sensor events
  */
 #define OBSERVER_NUMOF          (2U)
-#define OBSERVER_NODES          {23, 51} // and the watch
+#define OBSERVER_NODES          {51, 23} // and the watch
 
 /**
  * List a number of nodes that are ignored from this node
