@@ -70,7 +70,7 @@ void portal_out(uint16_t src, char* data, int length)
         id = (uint8_t)data[0];
         payload = (uint8_t)data[1];
         //sequ = (uint8_t)data[2]; --> TODO implement sequence number check
-        printf("fw %i %i %i\n", src, id, payload);
+        printf("bw %i %i %i\n", src, id, payload);
     } else {
         printf("UDP: unidentified data, from %i, length: %i\n", src, length);
     }
