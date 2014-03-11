@@ -48,7 +48,7 @@ ifeq ($(strip $(BOARD)),native)
 else ifeq ($(strip $(BOARD)),msba2)
 	USEMODULE += cc110x_ng
 else ifeq ($(strip $(BOARD)),avsextrem)
-	USEMODULE += cc110x
+	USEMODULE += cc110x_ng
 endif
 
 export INCLUDES += -I$(RIOTBASE)/sys/net/include -I$(RIOTBASE)/sys/net/routing/rpl -I$(RIOTBASE)/drivers/cc110x

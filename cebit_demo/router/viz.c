@@ -49,8 +49,16 @@ void viz_udp_pkt(uint8_t src)
     udpif_send(VIZ_ADDR, VIZ_PORT, evt, 3);
 #else
     printf("VIZ: UPD packet from %i\n", src);
-    printf("fw %i %i %i\n", id, DTA_RCVD, src);
+    printf("fw %i %i %i\n", src, DTA_RCVD, id);
 #endif
+}
+
+void viz_udp_snd(uint8_t dst)
+{
+    if (id == 32 || id == 33) {
+        printf("VIZ: UDP send packet to %i\n", dst);
+        printf("fw %i %i %i\n", id, DTA_RCVD, dst);
+    }
 }
 
 void viz_parent_select(uint8_t parent)
@@ -63,7 +71,7 @@ void viz_parent_select(uint8_t parent)
     udpif_send(VIZ_ADDR, VIZ_PORT, evt, 3);
 #else
     printf("VIZ: RPL %i selected parent: %i\n", id, parent);
-    printf("fw %i %i %i\n", id, PARENT_SELECT, parent);
+    // printf("fw %i %i %i\n", id, PARENT_SELECT, parent);
 #endif
 }
 
@@ -77,7 +85,7 @@ void viz_parent_deselect(uint8_t parent)
     udpif_send(VIZ_ADDR, VIZ_PORT, evt, 3);
 #else
     printf("VIZ: RPL %i deleted parent: %i\n", id, parent);
-    printf("fw %i %i %i\n", id, PARENT_DELETE, parent);
+    // printf("fw %i %i %i\n", id, PARENT_DELETE, parent);
 #endif
 }
 

@@ -13,12 +13,19 @@
 #ifndef NODE_ADDRESS
 #define NODE_ADDRESS            31
 #endif
+// #if NODE_ADDRESS == 31
+// #define LEVEL1
+// #elif (NODE_ADDRESS == 32) | (NODE_ADDRESS == 33)
+// #define LEVEL2
+// #elif (NODE_ADDRESS == 41) | (NODE_ADDRESS == 51)
+// #define LEVEL3
+// #endif
 #if NODE_ADDRESS == 31
-#define LEVEL1
-#elif (NODE_ADDRESS == 32) | (NODE_ADDRESS == 33)
-#define LEVEL2
-#elif (NODE_ADDRESS == 41) | (NODE_ADDRESS == 51)
-#define LEVEL3
+#define NODE_31
+#elif NODE_ADDRESS == 32
+#define NODE_32
+#elif NODE_ADDRESS == 33
+#define NODE_33
 #endif
 
 #define NODE_MODE               "n"
@@ -31,6 +38,8 @@
  * via UDP instead of printing it to the std out.
  */
 // #define VIZ_REMOTE              0
+
+#define CEBIT_RX_TOGGLE         1
 
 /**
  * List of addresses (as strings) of nodes interested in sensor events
