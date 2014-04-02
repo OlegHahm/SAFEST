@@ -46,7 +46,7 @@
  * Light node specific configuration options
  */
 #define LIGHT_COLOR_OK          {0, 125, 0}
-#define LIGHT_COLOR_WARN        {90, 0, 30}
+#define LIGHT_COLOR_WARN        {0, 40, 125}
 #define LIGHT_COLOR_ALARM       {125, 0, 0}
 
 #define LIGHT_CH_R              1
