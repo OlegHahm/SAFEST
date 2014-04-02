@@ -63,7 +63,7 @@ void rpl_udp_monitor(void)
     ipv6_hdr_t *ipv6_buf;
     uint8_t icmp_type, icmp_code;
     icmpv6_hdr_t *icmpv6_buf = NULL;
-    uint8_t ll_src;
+    uint8_t ll_src = 0;
 
     msg_init_queue(msg_q, RCV_BUFFER_SIZE);
 
