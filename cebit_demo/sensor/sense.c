@@ -82,8 +82,10 @@ void check_state(void)
         for (int i = 0; i < 3; i++) {
             if (acc_data[i] > AXIS_THRESHOLD || acc_data[i] < -AXIS_THRESHOLD) {
                 // printf("axis %d;  %d > %d", i, acc_data[i], AXIS_THRESHOLD);
-                if (state == i && rep_count < REP_LIMIT) {
-                    ++rep_count;
+                if (state == i) {
+                    if (rep_count < REP_LIMIT) {
+                        ++rep_count;
+                    }
                     // printf("inc %i\n", i);
                 } else {
                     state = i;
