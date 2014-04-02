@@ -48,7 +48,7 @@ static int sensepid;
 
 
 static int16_t acc_data[6];
-static int state;
+static int state = -1;
 static int rep_count = 0;
 
 
@@ -82,7 +82,7 @@ void check_state(void)
         for (int i = 0; i < 3; i++) {
             if (acc_data[i] > AXIS_THRESHOLD || acc_data[i] < -AXIS_THRESHOLD) {
                 // printf("axis %d;  %d > %d", i, acc_data[i], AXIS_THRESHOLD);
-                if (state == i) {
+                if (state == i && rep_count < REP_LIMIT) {
                     ++rep_count;
                     // printf("inc %i\n", i);
                 } else {
@@ -95,7 +95,7 @@ void check_state(void)
     }
     
     if (rep_count == REP_LIMIT) {
-        ++rep_count;
+        rep_count = REP_LIMIT + 1;
         switch (state) {
             case STATE_NORMAL:
                 evt_handler_ok();
